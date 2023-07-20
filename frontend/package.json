@@ -22,8 +22,6 @@
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^5.3.3",
-    "postcss": "^8.4.17",
-    "prettier": "^3.0.0",
-    "prettier-plugin-tailwindcss": "^0.4.1"
+    "postcss": "^8.4.17"
   }
 }
