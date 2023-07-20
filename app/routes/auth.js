@@ -2,9 +2,11 @@ const express = require('express');
 
 const router = express.Router();
 const { signUp, signIn } = require('../controller/auth');
+const { validateUserRegister } = require('../validator/signUpValidator');
+const { validateUserLogin } = require('../validator/signInValidator');
 
-router.post('/auth/signup', signUp);
-router.post('/auth/signin', signIn);
+router.post('/auth/signup', validateUserRegister, signUp);
+router.post('/auth/signin', validateUserLogin, signIn);
 
 // // Route untuk menangani permintaan reset password
 // routes.post('/forgot-password', (req, res) => {
