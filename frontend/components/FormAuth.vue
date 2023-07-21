@@ -23,6 +23,11 @@
       icon="ri-lock-line"
       v-model="form.password"
     />
+    <div class="flex justify-end">
+      <a href="/forgot-password">
+        <p class="text-[#7895CB] hover:text-primary">Lupa password ?</p>
+      </a>
+    </div>
     <Select
       v-if="variant === 'REGISTER'"
       label="Desa"
@@ -31,7 +36,11 @@
       v-model="form.desa"
     />
     <div class="flex justify-end mt-6">
-      <Button :label="variant === 'LOGIN' ? 'Masuk' : 'Daftar'" type="submit" />
+      <Button
+        :label="variant === 'LOGIN' ? 'Masuk' : 'Daftar'"
+        type="submit"
+        primary
+      />
     </div>
   </form>
 </template>

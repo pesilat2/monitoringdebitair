@@ -27,7 +27,10 @@
               icon="ri-mail-line"
             />
             <div class="mt-6">
-              <Button label="Kirim" fullWidth />
+              <Button label="Kirim" fullWidth primary />
+            </div>
+            <div class="mt-6">
+              <Button label="Cancel" fullWidth secondary />
             </div>
           </form>
         </div>
@@ -41,6 +44,7 @@ import Input from "@/components/inputs/Input.vue";
 import Button from "@/components/Button.vue";
 
 export default {
+  layout: "empty",
   components: {
     Input,
     Button,
