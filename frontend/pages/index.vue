@@ -54,6 +54,7 @@
 <script>
 import FormAuth from "@/components/FormAuth.vue";
 export default {
+  layout: "empty",
   name: "IndexPage",
   components: {
     FormAuth,
