@@ -3,12 +3,33 @@
     <Input
       v-if="variant === 'REGISTER'"
       label="Nama Lengkap"
-      id="name"
+      id="fullNname"
       type="text"
       icon="ri-user-line"
+      v-model="form.fullName"
+      :autoFocus="true"
     />
-    <Input label="Email" id="email" type="email" icon="ri-mail-line" />
-    <Input label="Password" id="password" type="password" icon="ri-lock-line" />
+    <Input
+      label="Email"
+      id="email"
+      type="email"
+      icon="ri-mail-line"
+      v-model="form.email"
+    />
+    <Input
+      label="Password"
+      id="password"
+      type="password"
+      icon="ri-lock-line"
+      v-model="form.password"
+    />
+    <Select
+      v-if="variant === 'REGISTER'"
+      label="Desa"
+      :data="dataDesa"
+      id="desa"
+      v-model="form.desa"
+    />
     <div class="flex justify-end mt-6">
       <Button :label="variant === 'LOGIN' ? 'Masuk' : 'Daftar'" type="submit" />
     </div>
@@ -17,15 +38,24 @@
 
 <script>
 import Input from "./inputs/Input.vue";
+import Select from "./inputs/Select.vue";
 import Button from "./Button.vue";
 
 export default {
-  components: { Input, Button },
+  components: { Input, Button, Select },
   props: {
     variant: String,
   },
   data() {
-    return {};
+    return {
+      form: {
+        fullName: "",
+        email: "",
+        password: "",
+        desa: "",
+      },
+      dataDesa: ["Sukabumi", "Bandung", "Bogor", "Jakarta"],
+    };
   },
   methods: {
     submitForm() {
@@ -34,6 +64,7 @@ export default {
       } else if (this.variant === "LOGIN") {
         console.log("LOGIN");
       }
+      console.log(this.form);
     },
   },
 };
