@@ -76,6 +76,7 @@ export default {
         console.log("LOGIN");
       }
       console.log(this.form);
+      this.$router.push("/dashboard");
     },
     navigate(route) {
       this.$router.push(`/${route}`);
