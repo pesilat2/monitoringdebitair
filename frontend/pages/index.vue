@@ -11,7 +11,7 @@
       class="absolute flex justify-center items-center top-0 left-0 w-full h-full"
     >
       <div
-        class="flex max-w-[900px] h-[500px] rounded-xl overflow-hidden bg-[#fcfcfc]"
+        class="flex max-w-[900px] h-[600px] rounded-xl overflow-hidden bg-[#fcfcfc]"
       >
         <!-- information -->
         <div

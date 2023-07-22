@@ -23,10 +23,12 @@
       icon="ri-lock-line"
       v-model="form.password"
     />
-    <div class="flex justify-end">
-      <a href="/forgot-password">
-        <p class="text-[#7895CB] hover:text-primary">Lupa password ?</p>
-      </a>
+    <div
+      v-if="variant === 'LOGIN'"
+      class="flex justify-end cursor-pointer"
+      @click="navigate('forgot-password')"
+    >
+      <p class="text-[#7895CB] hover:text-primary">Lupa password ?</p>
     </div>
     <Select
       v-if="variant === 'REGISTER'"
@@ -74,6 +76,9 @@ export default {
         console.log("LOGIN");
       }
       console.log(this.form);
+    },
+    navigate(route) {
+      this.$router.push(`/${route}`);
     },
   },
 };

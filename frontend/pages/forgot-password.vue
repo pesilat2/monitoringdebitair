@@ -29,10 +29,16 @@
             <div class="mt-6">
               <Button label="Kirim" fullWidth primary />
             </div>
-            <div class="mt-6">
-              <Button label="Cancel" fullWidth secondary />
-            </div>
           </form>
+          <div class="mt-6">
+            <Button
+              label="Cancel"
+              fullWidth
+              secondary
+              type="button"
+              :click="goBack"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -57,6 +63,9 @@ export default {
   methods: {
     submitForm() {
       console.log(this.email);
+    },
+    goBack() {
+      this.$router.go(-1);
     },
   },
 };
