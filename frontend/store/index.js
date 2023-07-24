@@ -6,4 +6,7 @@ export const getters = {
   loggedInUser(state) {
     return state.auth.user;
   },
+  userRole(state) {
+    return state.auth.user.role; // Mengambil nilai role dari user
+  },
 };

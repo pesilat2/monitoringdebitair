@@ -13,6 +13,7 @@ export const links = [
     name: "manajemen pengguna",
     path: "/manajemen",
     icon: "ri-git-repository-fill",
+    type: "ADMIN_UTAMA",
   },
 ];
 

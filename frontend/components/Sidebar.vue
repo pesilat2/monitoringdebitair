@@ -14,7 +14,7 @@
       </div>
       <div class="pt-10 px-9 flex flex-col gap-6">
         <ButtonSidebar
-          v-for="link of links"
+          v-for="link of filteredLinks"
           :key="link.nama"
           :linkData="link"
         />
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 import ButtonSidebar from "~/components/buttons/ButtonSidebar.vue";
 import { links, signout } from "~/helper/link";
 import "remixicon/fonts/remixicon.css";
@@ -45,6 +45,10 @@ export default {
       showNavbar: (state) => state.sidebar.showNavbar,
       showOverlay: (state) => state.sidebar.showOverlay,
     }),
+    ...mapGetters(["userRole"]),
+    filteredLinks() {
+      return this.getFilteredLinks(); // Panggil metode getFilteredLinks()
+    },
   },
   data() {
     return {
@@ -65,6 +69,11 @@ export default {
       } else {
         this.$store.commit("sidebar/toggleNavbar");
       }
+    },
+    getFilteredLinks() {
+      const role = this.userRole; // Dapatkan role pengguna dari getter
+      if (!role) return links; // Jika role tidak ada atau null, tampilkan semua links
+      return links.filter((link) => !link.type || link.type === role); // Filter links sesuai dengan role pengguna
     },
   },
 };
