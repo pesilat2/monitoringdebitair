@@ -58,9 +58,6 @@ export default {
       required: true,
     },
   },
-  mounted() {
-    console.log(this.$auth);
-  },
   computed: {
     ...mapGetters(["isAuthenticated", "loggedInUser"]),
   },

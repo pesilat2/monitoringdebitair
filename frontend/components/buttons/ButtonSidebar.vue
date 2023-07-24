@@ -1,20 +1,38 @@
 <template>
   <div @click="logout(linkData.name)">
-    <NuxtLink
-      :to="linkData.path"
-      class="flex items-center rounded-xl py-2 px-4 bg-[#ffffff]"
-    >
+    <template v-if="linkData.name === 'signout'">
       <div
-        class="bg-primary_dark rounded-2xl w-[48px] h-[48px] flex justify-center items-center"
+        class="flex items-center rounded-xl py-2 px-4 bg-[#ffffff] cursor-pointer"
       >
-        <i :class="linkData.icon" class="text-white text-heading-4"></i>
+        <div
+          class="bg-primary_dark rounded-2xl w-[48px] h-[48px] flex justify-center items-center"
+        >
+          <i :class="linkData.icon" class="text-white text-heading-4"></i>
+        </div>
+        <div>
+          <p class="text-paragaph ps-6 text-primary_dark capitalize">
+            {{ linkData.name }}
+          </p>
+        </div>
       </div>
-      <div>
-        <p class="text-paragaph ps-6 text-primary_dark capitalize">
-          {{ linkData.name }}
-        </p>
-      </div>
-    </NuxtLink>
+    </template>
+    <template v-else>
+      <NuxtLink
+        :to="linkData.path"
+        class="flex items-center rounded-xl py-2 px-4 bg-[#ffffff]"
+      >
+        <div
+          class="bg-primary_dark rounded-2xl w-[48px] h-[48px] flex justify-center items-center"
+        >
+          <i :class="linkData.icon" class="text-white text-heading-4"></i>
+        </div>
+        <div>
+          <p class="text-paragaph ps-6 text-primary_dark capitalize">
+            {{ linkData.name }}
+          </p>
+        </div>
+      </NuxtLink>
+    </template>
   </div>
 </template>
 
@@ -31,7 +49,9 @@ export default {
   },
   methods: {
     logout(name) {
+      console.log(name);
       if (name === "signout") {
+        console.log("masuk");
         this.$auth.logout();
       }
     },

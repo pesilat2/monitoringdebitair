@@ -117,21 +117,19 @@ export default {
             },
           });
           const role = this.$store.state.auth.user.role;
-
+          console.log(role);
           if (role === "USER") {
             this.$router.push("/dashboard-user");
-          }
-          if (role === "ADMIN_UTAMA") {
-            this.$router.push("/dashboard-admin");
-          }
-          if (role === "ADMIN_DAERAH") {
+          } else if (role === "ADMIN_UTAMA") {
+            this.$router.push("/dashboard-admin-utama");
+          } else if (role === "ADMIN_DAERAH") {
             this.$router.push("/dashboard-admin-daerah");
           }
         } catch (error) {
           this.error = error.response.data.message;
         }
       }
-      console.log(this.form);
+      // console.log(this.form);
     },
     navigate(route) {
       this.$router.push(`/${route}`);

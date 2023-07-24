@@ -1,5 +1,5 @@
 <template>
-  <h1>Dashboard admin user</h1>
+  <h1>Dashboard admin daerah</h1>
 </template>
 
 <script>

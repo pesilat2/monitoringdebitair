@@ -29,8 +29,13 @@ import Chart from "~/components/Chart.vue";
 import CardStatistik from "~/components/CardStatistik.vue";
 import CardItemLaporan from "~/components/card/CardItemLaporan.vue";
 import { dashboardData } from "~/helper/dataTableLaporan";
+import { mapGetters } from "vuex";
 
 export default {
+  middleware: ["auth", "dashboard-access"],
+  computed: {
+    ...mapGetters(["loggedInUser"]),
+  },
   components: {
     Header,
     Chart,
