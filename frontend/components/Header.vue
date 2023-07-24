@@ -27,7 +27,7 @@
           <h1
             class="hidden md:block text-heading-4 text-primary font-heading-1"
           >
-            Hendra Setiawan
+            {{ loggedInUser.fullname }}
           </h1>
         </div>
         <div>

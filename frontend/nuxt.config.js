@@ -64,6 +64,7 @@ export default {
         },
       },
     },
+    middleware: "guest",
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

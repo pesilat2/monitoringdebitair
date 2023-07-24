@@ -98,7 +98,7 @@ export default {
           const res = await this.$axios.post("signup", {
             ...this.form,
           });
-          this.variant = "LOGIN";
+          this.$emit("changeVariant", "LOGIN");
           this.form = this.form = {
             fullname: "",
             email: "",
@@ -116,7 +116,10 @@ export default {
               password: this.form.password,
             },
           });
-        } catch (error) {}
+          this.$nuxt.refresh();
+        } catch (error) {
+          this.error = error.response.data.message;
+        }
       }
       console.log(this.form);
     },

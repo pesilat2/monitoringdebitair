@@ -1,7 +1,7 @@
 <template>
   <div class="w-full overflow-y-auto">
     <Header :title="headerTitle" :iconClasses="headerClass" />
-    <div class="grid grid-cols-3 px-6 pt-6 w-full gap-6">
+    <div class="grid grid-cols-3 p-6 w-full gap-6">
       <!-- profile -->
       <div class="col-span-3 md:col-span-1 bg-white h-full pt-14">
         <div class="mx-auto w-full">
@@ -18,21 +18,23 @@
             <h1
               class="font-heading-1 text-heading-1 text-primary_dark mt-9 text-center"
             >
-              Hendra Setiawan
+              {{ loggedInUser.fullname }}
             </h1>
             <p
               class="text-[#999999] text-base font-normal text-center text- mt-2 text-heading-5"
             >
-              administrator
+              {{ loggedInUser.role }}
             </p>
           </div>
 
           <div class="w-full">
-            <ItemProfile label="Alamat" fill="Sukabumi" />
-            <ItemProfile label="Umur" fill="23" />
-            <ItemProfile label="jenis Kelamin" fill="Laki-laki" />
-            <ItemProfile label="Status Pernikahan" fill="Menikah" />
-            <ItemProfile label="Hobi" fill="Membaca" />
+            <ItemProfile label="Alamat" :fill="loggedInUser.address" />
+            <ItemProfile label="Umur" :fill="loggedInUser.age" />
+            <ItemProfile label="jenis Kelamin" :fill="loggedInUser.gender" />
+            <ItemProfile
+              label="Status Pernikahan"
+              :fill="loggedInUser.maritalStatus"
+            />
           </div>
         </div>
       </div>
@@ -113,6 +115,8 @@ import Header from "~/components/Header.vue";
 import ItemProfile from "~/components/ItemProfile.vue";
 import Input from "~/components/inputs/Input.vue";
 import Button from "~/components/Button.vue";
+import { mapGetters } from "vuex";
+
 export default {
   components: {
     Header,
@@ -134,6 +138,12 @@ export default {
         hobi: "",
       },
     };
+  },
+  computed: {
+    ...mapGetters(["isAuthenticated", "loggedInUser"]),
+  },
+  mounted() {
+    console.log(this.loggedInUser);
   },
   methods: {
     submitEditProfile() {

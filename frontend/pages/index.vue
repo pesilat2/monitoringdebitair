@@ -44,7 +44,7 @@
 
         <!-- login form -->
         <div class="flex items-center p-11 w-[575px] py-11 px-24">
-          <FormAuth :variant="variant" />
+          <FormAuth :variant="variant" @changeVariant="changeVariant" />
         </div>
       </div>
     </div>
