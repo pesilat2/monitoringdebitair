@@ -64,7 +64,13 @@ export default {
         },
       },
     },
-    middleware: "guest",
+    redirect: {
+      login: "/",
+    },
+    middleware: ["auth"],
+  },
+  router: {
+    middleware: ["auth"],
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

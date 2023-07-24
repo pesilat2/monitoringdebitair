@@ -18,6 +18,7 @@
           :key="link.nama"
           :linkData="link"
         />
+        <ButtonSidebar :linkData="signout" />
       </div>
     </div>
     <div
@@ -31,7 +32,7 @@
 <script>
 import { mapState } from "vuex";
 import ButtonSidebar from "~/components/buttons/ButtonSidebar.vue";
-import { links } from "~/helper/link";
+import { links, signout } from "~/helper/link";
 import "remixicon/fonts/remixicon.css";
 
 export default {
@@ -49,6 +50,7 @@ export default {
     return {
       isAdmin: false,
       links,
+      signout,
       isClosing: false,
     };
   },
