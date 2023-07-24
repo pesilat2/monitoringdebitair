@@ -23,6 +23,13 @@
       icon="ri-lock-line"
       v-model="form.password"
     />
+    <div
+      v-if="variant === 'LOGIN'"
+      class="flex justify-end cursor-pointer"
+      @click="navigate('forgot-password')"
+    >
+      <p class="text-[#7895CB] hover:text-primary">Lupa password ?</p>
+    </div>
     <Select
       v-if="variant === 'REGISTER'"
       label="Desa"
@@ -31,7 +38,11 @@
       v-model="form.desa"
     />
     <div class="flex justify-end mt-6">
-      <Button :label="variant === 'LOGIN' ? 'Masuk' : 'Daftar'" type="submit" />
+      <Button
+        :label="variant === 'LOGIN' ? 'Masuk' : 'Daftar'"
+        type="submit"
+        primary
+      />
     </div>
   </form>
 </template>
@@ -65,6 +76,10 @@ export default {
         console.log("LOGIN");
       }
       console.log(this.form);
+      this.$router.push("/dashboard");
+    },
+    navigate(route) {
+      this.$router.push(`/${route}`);
     },
   },
 };

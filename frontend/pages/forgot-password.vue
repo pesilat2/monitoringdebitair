@@ -27,9 +27,18 @@
               icon="ri-mail-line"
             />
             <div class="mt-6">
-              <Button label="Kirim" fullWidth />
+              <Button label="Kirim" fullWidth primary />
             </div>
           </form>
+          <div class="mt-6">
+            <Button
+              label="Cancel"
+              fullWidth
+              secondary
+              type="button"
+              :click="goBack"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -41,6 +50,7 @@ import Input from "@/components/inputs/Input.vue";
 import Button from "@/components/Button.vue";
 
 export default {
+  layout: "empty",
   components: {
     Input,
     Button,
@@ -53,6 +63,9 @@ export default {
   methods: {
     submitForm() {
       console.log(this.email);
+    },
+    goBack() {
+      this.$router.go(-1);
     },
   },
 };
