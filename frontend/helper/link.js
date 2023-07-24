@@ -1,6 +1,6 @@
 export const link = {
   dashboard: "/dashboard",
-  profile: "/profile",
   "manajemen pengguna": "/manajemen",
+  profile: "/profile",
   signout: "/",
 };
