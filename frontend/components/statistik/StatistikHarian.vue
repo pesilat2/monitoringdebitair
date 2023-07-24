@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white px-5 py-4 rounded-xl shadow-xl w-full lg:w-[40%]">
+  <div class="bg-white px-5 py-4 rounded-xl shadow-xl w-full xl:w-[40%]">
     <h1 class="text-heading-4 text-black font-heading-1 mb-4">
       Statistik Harian
     </h1>

@@ -22,7 +22,7 @@
           </h4>
         </div>
       </div>
-      <div to="/profile" class="flex items-center gap-3">
+      <nuxt-link to="/profile" class="header-profile flex items-center gap-3">
         <div>
           <h1
             class="hidden md:block text-heading-4 text-primary font-heading-1"
@@ -37,7 +37,7 @@
             class="rounded-full w-12"
           />
         </div>
-      </div>
+      </nuxt-link>
     </div>
   </header>
 </template>
@@ -67,3 +67,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.header-profile {
+  @apply shadow-none;
+}
+</style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white shadow-lg rounded-xl w-full md:w-[50%] lg:w-[31%]">
+  <div class="bg-white shadow-lg rounded-xl w-full md:w-[45%] xl:w-[31%]">
     <div class="flex justify-between items-center px-5 py-4">
       <div>
         <h3 class="text-heading-4 text-black font-heading-1">Harian</h3>
