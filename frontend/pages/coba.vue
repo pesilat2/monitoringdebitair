@@ -1,6 +1,7 @@
 <template>
   <div>
     <Button label="Masuk" type="submit" primary :click="onClick" />
+    <div @click="onClick">coba</div>
   </div>
 </template>
 
@@ -12,7 +13,7 @@ export default {
   },
   methods: {
     onClick() {
-      this.$router.go(-1);
+      // this.$router.go(-1);
       console.log("coba");
     },
   },
