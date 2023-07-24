@@ -1,17 +1,21 @@
 <template>
-  <NuxtLink
-    :to="to"
-    class="flex items-center rounded-xl py-2 px-4 bg-[#ffffff]"
-  >
-    <div
-      class="bg-primary_dark rounded-2xl w-[48px] h-[48px] flex justify-center items-center"
+  <div @click="logout(linkData.name)">
+    <NuxtLink
+      :to="linkData.path"
+      class="flex items-center rounded-xl py-2 px-4 bg-[#ffffff]"
     >
-      <i :class="iconClasses"></i>
-    </div>
-    <div>
-      <p class="text-paragaph ps-6 text-primary_dark capitalize">{{ label }}</p>
-    </div>
-  </NuxtLink>
+      <div
+        class="bg-primary_dark rounded-2xl w-[48px] h-[48px] flex justify-center items-center"
+      >
+        <i :class="linkData.icon" class="text-white text-heading-4"></i>
+      </div>
+      <div>
+        <p class="text-paragaph ps-6 text-primary_dark capitalize">
+          {{ linkData.name }}
+        </p>
+      </div>
+    </NuxtLink>
+  </div>
 </template>
 
 <script>
@@ -20,17 +24,26 @@ import "remixicon/fonts/remixicon.css";
 export default {
   name: "ButtonSidebar",
   props: {
-    to: {
-      type: [String, Object],
+    linkData: {
+      type: Object,
       required: true,
     },
-    iconClasses: {
-      type: String,
+    onClick: {
+      type: Function,
       required: true,
     },
-    label: {
-      type: String,
-      required: true,
+  },
+  mounted() {
+    console.log(this.linkData.onClick);
+  },
+  methods: {
+    test() {
+      console.log(this.$auth);
+    },
+    logout(name) {
+      if (name === "signout") {
+        this.$auth.logout();
+      }
     },
   },
 };

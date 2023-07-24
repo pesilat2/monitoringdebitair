@@ -44,6 +44,7 @@
 
 <script>
 import "remixicon/fonts/remixicon.css";
+import { mapGetters } from "vuex";
 
 export default {
   name: "Header",
@@ -56,6 +57,12 @@ export default {
       type: String,
       required: true,
     },
+  },
+  mounted() {
+    console.log(this.$auth);
+  },
+  computed: {
+    ...mapGetters(["isAuthenticated", "loggedInUser"]),
   },
   methods: {
     toggleNavbar() {

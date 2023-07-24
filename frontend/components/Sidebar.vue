@@ -14,11 +14,10 @@
       </div>
       <div class="pt-10 px-9 flex flex-col gap-6">
         <ButtonSidebar
-          v-for="(route, label) in link"
-          :key="label"
-          :to="route"
-          :iconClasses="getIconClass(label)"
-          :label="label"
+          v-for="link of links"
+          :key="link.nama"
+          :linkData="link"
+          :onClick="logout"
         />
       </div>
     </div>
@@ -33,7 +32,7 @@
 <script>
 import { mapState } from "vuex";
 import ButtonSidebar from "~/components/buttons/ButtonSidebar.vue";
-import { link } from "~/helper/link";
+import { links } from "~/helper/link";
 import "remixicon/fonts/remixicon.css";
 
 export default {
@@ -50,7 +49,7 @@ export default {
   data() {
     return {
       isAdmin: false,
-      link,
+      links,
       isClosing: false,
     };
   },
@@ -66,18 +65,8 @@ export default {
         this.$store.commit("sidebar/toggleNavbar");
       }
     },
-    getIconClass(label) {
-      if (label === "dashboard") {
-        return "ri-home-4-fill text-white text-heading-4";
-      } else if (label === "profile") {
-        return "ri-file-user-fill text-white text-heading-4";
-      } else if (label === "manajemen pengguna") {
-        return "ri-git-repository-fill text-white text-heading-4";
-      } else if (label === "signout") {
-        return "ri-logout-box-fill text-white text-heading-4";
-      } else {
-        return;
-      }
+    logout() {
+      console.log("logout");
     },
   },
 };

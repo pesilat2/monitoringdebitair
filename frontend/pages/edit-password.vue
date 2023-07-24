@@ -67,6 +67,7 @@ export default {
         console.log("password tidak sesuai");
       }
     },
+    
   },
 };
 </script>
