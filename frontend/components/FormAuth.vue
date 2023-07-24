@@ -116,7 +116,17 @@ export default {
               password: this.form.password,
             },
           });
-          this.$nuxt.refresh();
+          const role = this.$store.state.auth.user.role;
+
+          if (role === "USER") {
+            this.$router.push("/dashboard-user");
+          }
+          if (role === "ADMIN_UTAMA") {
+            this.$router.push("/dashboard-admin");
+          }
+          if (role === "ADMIN_DAERAH") {
+            this.$router.push("/dashboard-admin-daerah");
+          }
         } catch (error) {
           this.error = error.response.data.message;
         }

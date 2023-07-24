@@ -28,18 +28,8 @@ export default {
       type: Object,
       required: true,
     },
-    onClick: {
-      type: Function,
-      required: true,
-    },
-  },
-  mounted() {
-    console.log(this.linkData.onClick);
   },
   methods: {
-    test() {
-      console.log(this.$auth);
-    },
     logout(name) {
       if (name === "signout") {
         this.$auth.logout();

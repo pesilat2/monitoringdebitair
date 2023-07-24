@@ -64,7 +64,12 @@ export default {
         },
       },
     },
-    middleware: "guest",
+    redirect: {
+      login: "/", // Halaman yang dituju ketika pengguna belum login
+      logout: "/", // Halaman yang dituju setelah logout
+      callback: "/callback", // Halaman yang dituju setelah autentikasi eksternal (opsional)
+      home: "/dashboard", // Halaman yang dituju setelah login berhasil,
+    },
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

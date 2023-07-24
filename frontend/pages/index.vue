@@ -55,7 +55,7 @@
 import FormAuth from "@/components/FormAuth.vue";
 export default {
   layout: "empty",
-  middleware: "guest",
+  middleware: "auth",
   name: "IndexPage",
   components: {
     FormAuth,
