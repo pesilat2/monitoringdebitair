@@ -22,7 +22,7 @@
           </h4>
         </div>
       </div>
-      <div class="flex items-center gap-3">
+      <div to="/profile" class="flex items-center gap-3">
         <div>
           <h1
             class="hidden md:block text-heading-4 text-primary font-heading-1"

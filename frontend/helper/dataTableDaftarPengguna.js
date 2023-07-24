@@ -1,0 +1,18 @@
+export const dashboardData = [
+  { id: 1, nama: "John Doe", role: "Admin" },
+  { id: 2, nama: "Jane Smith", role: "User" },
+  { id: 3, nama: "Michael Johnson", role: "Admin" },
+  { id: 4, nama: "Emily Lee", role: "User" },
+  { id: 5, nama: "William Kim", role: "Admin" },
+  { id: 6, nama: "Sophia Brown", role: "User" },
+  { id: 7, nama: "Christopher Wang", role: "Admin" },
+  { id: 8, nama: "Olivia Liu", role: "User" },
+  { id: 9, nama: "Daniel Chen", role: "Admin" },
+  { id: 10, nama: "Isabella Kim", role: "User" },
+  { id: 11, nama: "James Lee", role: "Admin" },
+  { id: 12, nama: "Ava Park", role: "User" },
+  { id: 13, nama: "Benjamin Kim", role: "Admin" },
+  { id: 14, nama: "Mia Johnson", role: "User" },
+  { id: 15, nama: "Ethan Lee", role: "Admin" },
+  { id: 16, nama: "Sophia Lee", role: "User" },
+];
