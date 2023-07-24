@@ -48,9 +48,6 @@ export default {
     },
   },
   methods: {
-    test() {
-      console.log(this.$auth);
-    },
     logout(name) {
       console.log(name);
       if (name === "signout") {

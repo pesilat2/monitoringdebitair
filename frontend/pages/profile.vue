@@ -7,8 +7,14 @@
         <div class="mx-auto w-full">
           <div class="mb-6">
             <div
-              class="rounded-full overflow-hidden w-[180px] h-[180px] mx-auto"
+              class="rounded-full overflow-hidden w-[180px] h-[180px] mx-auto relative flex justify-center items-center"
             >
+              <input
+                type="file"
+                accept="image/*"
+                class="absolute"
+                @change="changeImage"
+              />
               <img
                 class="rounded-full mx-auto"
                 src="https://th.bing.com/th/id/OIP.w6Cs6qz234c71XloeqKdwgHaHa?w=174&h=180&c=7&r=0&o=5&pid=1.7"
@@ -137,6 +143,7 @@ export default {
         maritalStatus: "",
         hobi: "",
       },
+      changeImage: "",
     };
   },
   computed: {
@@ -148,6 +155,7 @@ export default {
   methods: {
     submitEditProfile() {
       console.log(this.editForm);
+      console.log(this.changeImage);
     },
   },
 };
