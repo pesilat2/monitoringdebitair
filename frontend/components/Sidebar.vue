@@ -17,7 +17,6 @@
           v-for="link of links"
           :key="link.nama"
           :linkData="link"
-          :onClick="logout"
         />
       </div>
     </div>
@@ -64,9 +63,6 @@ export default {
       } else {
         this.$store.commit("sidebar/toggleNavbar");
       }
-    },
-    logout() {
-      console.log("logout");
     },
   },
 };
