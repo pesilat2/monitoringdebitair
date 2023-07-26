@@ -1,6 +1,12 @@
 <template>
   <div>
-    <Notification :message="error" v-if="error" />
+    <Notification
+      :message="message"
+      :error="status === 'ERROR'"
+      :success="status === 'SUCCESS'"
+      :warning="status === 'WARNING'"
+      @closeNotification="closeNotification"
+    />
     <form @submit.prevent="submitForm()" class="w-full">
       <Input
         v-if="variant === 'REGISTER'"
@@ -9,6 +15,7 @@
         type="text"
         icon="ri-user-line"
         v-model="form.fullname"
+        @closeNotification="closeNotification"
         :autoFocus="true"
       />
       <Input
@@ -16,6 +23,7 @@
         id="email"
         type="email"
         icon="ri-mail-line"
+        @closeNotification="closeNotification"
         v-model="form.email"
       />
       <Input
@@ -23,6 +31,7 @@
         id="password"
         type="password"
         icon="ri-lock-line"
+        @closeNotification="closeNotification"
         v-model="form.password"
       />
       <div
@@ -37,6 +46,7 @@
         label="Desa"
         :data="dataRegions"
         id="desa"
+        @closeNotification="closeNotification"
         v-model="form.regionId"
       />
       <div class="flex justify-end mt-6">
@@ -69,7 +79,8 @@ export default {
         password: "",
         regionId: "",
       },
-      error: null,
+      status: "",
+      message: "",
       dataRegions: [],
     };
   },
@@ -90,7 +101,6 @@ export default {
         this.error = err;
       });
   },
-  computed: {},
   methods: {
     async submitForm() {
       if (this.variant === "REGISTER") {
@@ -105,8 +115,11 @@ export default {
             password: "",
             regionId: "",
           };
-        } catch (e) {
-          this.error = e.response.data.message;
+          this.message = "Daftar berhasil !";
+          this.status = "SUCCESS";
+        } catch (err) {
+          this.message = err.response.data.message;
+          this.status = "ERROR";
         }
       } else if (this.variant === "LOGIN") {
         try {
@@ -117,7 +130,6 @@ export default {
             },
           });
           const role = this.$store.state.auth.user.role;
-          console.log(role);
           if (role === "USER") {
             this.$router.push("/dashboard-user");
           } else if (role === "ADMIN_UTAMA") {
@@ -125,15 +137,24 @@ export default {
           } else if (role === "ADMIN_DAERAH") {
             this.$router.push("/dashboard-admin-daerah");
           }
-        } catch (error) {
-          this.error = error.response.data.message;
+          this.message = "Login Berhasil";
+          this.status = "SUCCESS";
+        } catch (err) {
+          this.message = err.response.data.message;
+          this.status = "ERROR";
         }
       }
-      // console.log(this.form);
+    },
+    closeNotification() {
+      this.message = "";
+      this.status = "";
     },
     navigate(route) {
       this.$router.push(`/${route}`);
     },
+  },
+  mounted() {
+    console.log(this.message);
   },
 };
 </script>

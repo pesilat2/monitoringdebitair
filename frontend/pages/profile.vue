@@ -56,7 +56,7 @@
               label="Nama Lengkap"
               id="name"
               type="text"
-              v-model="editForm.fullName"
+              v-model="editForm.fullname"
               icon="ri-user-line"
             />
             <Input
@@ -135,7 +135,7 @@ export default {
       headerTitle: "Profile",
       headerClass: "ri-file-user-fill text-heading-4 text-primary_dark",
       editForm: {
-        fullName: "",
+        fullname: "",
         email: "",
         address: "",
         age: "",
@@ -153,9 +153,11 @@ export default {
     console.log(this.loggedInUser);
   },
   methods: {
-    submitEditProfile() {
-      console.log(this.editForm);
-      console.log(this.changeImage);
+    async submitEditProfile() {
+      await this.$axios.put(
+        "/update/user/" + this.loggedInUser.id,
+        this.editForm
+      );
     },
   },
 };

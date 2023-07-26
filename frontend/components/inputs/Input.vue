@@ -15,7 +15,7 @@
         :autofocus="autoFocus"
         class="w-full h-full outline-none text-2xl text-[#7895CB]"
         :value="value"
-        @input="$emit('input', $event.target.value)"
+        @input="handlechangeInput"
       />
     </div>
   </div>
@@ -31,6 +31,12 @@ export default {
     icon: String,
     value: String,
     autoFocus: Boolean,
+  },
+  methods: {
+    handlechangeInput(event) {
+      this.$emit("input", event.target.value);
+      this.$emit("closeNotification");
+    },
   },
 };
 </script>

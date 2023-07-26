@@ -1,14 +1,14 @@
 <template>
-  <button @click="logout">logout</button>
+  <div>
+    <button>error</button>
+  </div>
 </template>
 
 <script>
+import ImageUploader from "~/components/ImageUploader.vue";
 export default {
-  methods: {
-    logout() {
-      console.log("test");
-      this.$auth.logout();
-    },
+  components: {
+    ImageUploader,
   },
 };
 </script>
