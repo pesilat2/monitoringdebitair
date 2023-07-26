@@ -52,5 +52,22 @@ export default {
       dashboardType: "adminUtama",
     };
   },
+  async fetch() {
+    await this.$axios
+      .$get("/regions")
+      .then((data) => {
+        const regions = data.data.regions.map((region) => {
+          return {
+            id: region.id,
+            name: region.name,
+            value: region.id,
+          };
+        });
+        this.dataRegions = regions;
+      })
+      .catch((err) => {
+        this.error = err;
+      });
+  },
 };
 </script>

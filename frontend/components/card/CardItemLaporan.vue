@@ -43,6 +43,8 @@
       <DashboardTable
         :dashboardType="dashboardType"
         :tableData="filteredData"
+        @user-changed="handleUserChanged"
+        @delete-user="handleDeleteUser"
       />
     </div>
   </div>
@@ -126,8 +128,25 @@ export default {
         case "pengguna":
           return "nama";
         default:
-          return "nama"; // Ganti dengan nilai default yang sesuai
+          return "nama"; // Ganti dengan nilai default yang sesuai ( ini untuk manajement pengguna)
       }
+    },
+    // Tangani perubahan data yang diberikan dari DashboardTable
+    handleUserChanged(id, user) {
+      console.log(id, user);
+      // Perbarui data yang diberikan oleh DashboardTable dengan nilai yang baru
+      this.tableData = this.tableData.map((item) => {
+        console.log(item);
+        if (item.id === id) {
+          item.nama = user.nama;
+          item.email = user.email;
+          item.role = user.role;
+        }
+        return item;
+      });
+    },
+    handleDeleteUser(id) {
+      this.tableData = this.tableData.filter((user) => user.id !== id);
     },
   },
 };

@@ -32,7 +32,7 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 import ButtonSidebar from "~/components/buttons/ButtonSidebar.vue";
-import { links, signout } from "~/helper/link";
+import { signout } from "~/helper/link";
 import "remixicon/fonts/remixicon.css";
 
 export default {
@@ -45,7 +45,7 @@ export default {
       showNavbar: (state) => state.sidebar.showNavbar,
       showOverlay: (state) => state.sidebar.showOverlay,
     }),
-    ...mapGetters(["userRole"]),
+    ...mapGetters(["userRole", "routes"]),
     filteredLinks() {
       return this.getFilteredLinks(); // Panggil metode getFilteredLinks()
     },
@@ -53,7 +53,6 @@ export default {
   data() {
     return {
       isAdmin: false,
-      links,
       signout,
       isClosing: false,
     };
@@ -72,8 +71,8 @@ export default {
     },
     getFilteredLinks() {
       const role = this.userRole; // Dapatkan role pengguna dari getter
-      if (!role) return links; // Jika role tidak ada atau null, tampilkan semua links
-      return links.filter((link) => !link.type || link.type === role); // Filter links sesuai dengan role pengguna
+      if (!role) return this.routes; // Jika role tidak ada atau null, tampilkan semua links
+      return this.routes.filter((link) => !link.type || link.type === role); // Filter links sesuai dengan role pengguna
     },
   },
 };

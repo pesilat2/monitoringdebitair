@@ -1,22 +1,3 @@
-export const links = [
-  {
-    name: "dashboard",
-    path: "/dashboard",
-    icon: "ri-home-4-fill",
-  },
-  {
-    name: "profile",
-    path: "/profile",
-    icon: "ri-file-user-fill",
-  },
-  {
-    name: "manajemen pengguna",
-    path: "/manajemen",
-    icon: "ri-git-repository-fill",
-    type: "ADMIN_UTAMA",
-  },
-];
-
 export const signout = {
   name: "signout",
   path: "/",

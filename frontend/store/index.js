@@ -9,4 +9,33 @@ export const getters = {
   userRole(state) {
     return state.auth.user.role; // Mengambil nilai role dari user
   },
+  routes(state) {
+    let path = "";
+    if (state.auth.user.role === "ADMIN_UTAMA") {
+      path = "/dashboard-admin-utama";
+    } else if (state.auth.user.role === "ADMIN_DAERAH") {
+      path = "/dashboard-admin-daerah";
+    } else {
+      path = "/dashboard-user";
+    }
+    const links = [
+      {
+        name: "dashboard",
+        path: path,
+        icon: "ri-home-4-fill",
+      },
+      {
+        name: "profile",
+        path: "/profile",
+        icon: "ri-file-user-fill",
+      },
+      {
+        name: "manajemen pengguna",
+        path: "/manajemen",
+        icon: "ri-git-repository-fill",
+        type: "ADMIN_UTAMA",
+      },
+    ];
+    return links;
+  },
 };
