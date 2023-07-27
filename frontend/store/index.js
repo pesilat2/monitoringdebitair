@@ -25,6 +25,11 @@ export const getters = {
         icon: "ri-home-4-fill",
       },
       {
+        name: "pemakaian",
+        path: "/pemakaian",
+        icon: "ri-order-play-line",
+      },
+      {
         name: "profile",
         path: "/profile",
         icon: "ri-file-user-fill",

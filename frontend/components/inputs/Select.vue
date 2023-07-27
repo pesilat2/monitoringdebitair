@@ -14,11 +14,11 @@
       >
         <option
           class="text-xl border border-[#7895CB] font-normal text-[#7895CB] mb-2"
-          v-for="region in data"
-          :key="region.id"
-          :value="region.value"
+          v-for="item in data"
+          :key="item.id"
+          :value="item.value"
         >
-          {{ region.name }}
+          {{ item.name }}
         </option>
       </select>
     </div>

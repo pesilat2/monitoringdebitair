@@ -8,7 +8,7 @@
       </div>
       <div>
         <div class="flex items-center gap-3">
-          <i :class="iconClasses"></i>
+          <i :class="`${iconClasses} text-heading-4 text-primary_dark`"></i>
           <div class="flex gap-2">
             <p class="text-primary_dark text-paragaph">/</p>
             <p class="text-primary_dark text-paragaph">{{ title }}</p>
