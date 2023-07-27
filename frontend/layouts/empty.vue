@@ -1,18 +1,17 @@
 <template>
   <div class="bg-gradient-to-r from-primary_dark to-primary h-full">
+    <Notification />
     <nuxt-child />
   </div>
 </template>
 
 <script>
-import Header from "~/components/Header.vue";
-import Sidebar from "~/components/Sidebar.vue";
+import Notification from "~/components/Notification.vue";
 
 export default {
   name: "Default",
-  conmponents: {
-    Header,
-    Sidebar,
+  components: {
+    Notification,
   },
 };
 </script>

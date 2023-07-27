@@ -1,10 +1,6 @@
 <template>
   <div>
-    <Notification
-      :message="message"
-      success
-      @closeNotification="closeNotification"
-    />
+    <Notification />
     <div class="bg-[#D8E5F1] flex">
       <Sidebar />
       <nuxt-child />
@@ -21,18 +17,6 @@ export default {
   conmponents: {
     Sidebar,
     Notification,
-  },
-  data() {
-    return {
-      message: "",
-      status: "",
-    };
-  },
-  methods: {
-    closeNotification() {
-      this.message = "";
-      this.status = "";
-    },
   },
 };
 </script>
