@@ -43,7 +43,7 @@ module.exports = {
         onDelete: 'CASCADE',
       },
       age: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.DATEONLY,
       },
       isMarried: {
         type: Sequelize.BOOLEAN,

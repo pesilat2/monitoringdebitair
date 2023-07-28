@@ -52,8 +52,11 @@ const findOrderById = async (orderId) => {
 };
 
 const findOrderByUserId = async (userId) => {
-  const orders = await Order.findAll({ where: { userId } });
-  return orders;
+  const order = await Order.findOne({ where: { userId } });
+  if (!order) {
+    throw new NotFoundError('transaksi tidak ditemukan');
+  }
+  return order;
 };
 
 const deleteOrderById = async (orderId) => {
