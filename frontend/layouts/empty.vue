@@ -1,6 +1,6 @@
 <template>
   <div class="bg-gradient-to-r from-primary_dark to-primary h-full">
-    <Notification />
+    <Notification :duration="5000" />
     <nuxt-child />
   </div>
 </template>

@@ -1,7 +1,7 @@
 export const state = () => ({
   notification: {
-    message: "test",
-    status: "error",
+    message: "",
+    status: "",
   },
 });
 

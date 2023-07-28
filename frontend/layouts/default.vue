@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Notification />
+    <Notification :duration="5000" />
     <div class="bg-[#D8E5F1] flex">
       <Sidebar />
       <nuxt-child />

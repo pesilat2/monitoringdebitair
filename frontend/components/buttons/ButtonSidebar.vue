@@ -2,12 +2,15 @@
   <div @click="logout(linkData.name)">
     <template v-if="linkData.name === 'signout'">
       <div
-        class="flex items-center rounded-xl py-2 px-4 bg-[#ffffff] cursor-pointer"
+        class="container flex items-center rounded-xl py-2 px-4 bg-[#fcfcfc] cursor-pointer hover:scale-105 transition-transform duration-200 hover:shadow-customdua"
       >
         <div
-          class="bg-primary_dark rounded-2xl w-[48px] h-[48px] flex justify-center items-center"
+          class="box bg-white rounded-2xl w-[48px] h-[48px] flex justify-center items-center shadow-customdua transition-colors duration-200"
         >
-          <i :class="linkData.icon" class="text-white text-heading-4"></i>
+          <i
+            :class="linkData.icon"
+            class="text-primary_dark text-heading-4 icon"
+          ></i>
         </div>
         <div>
           <p class="text-paragaph ps-6 text-primary_dark capitalize">
@@ -19,12 +22,15 @@
     <template v-else>
       <NuxtLink
         :to="linkData.path"
-        class="flex items-center rounded-xl py-2 px-4 bg-[#ffffff]"
+        class="container flex items-center rounded-xl py-2 px-4 bg-[#fcfcfc] hover:shadow-customdua hover:scale-105 transition-transform duration-200"
       >
         <div
-          class="bg-primary_dark rounded-2xl w-[48px] h-[48px] flex justify-center items-center"
+          class="box bg-white rounded-2xl w-[48px] h-[48px] flex justify-center items-center shadow-customdua transition-colors duration-200"
         >
-          <i :class="linkData.icon" class="text-white text-heading-4"></i>
+          <i
+            :class="linkData.icon"
+            class="text-primary_dark icon text-heading-4"
+          ></i>
         </div>
         <div>
           <p class="text-paragaph ps-6 text-primary_dark capitalize">
@@ -66,6 +72,21 @@ export default {
 
 <style>
 .nuxt-link-exact-active {
-  @apply shadow-xl;
+  @apply shadow-customdua scale-105 transition-transform duration-200;
+}
+.nuxt-link-exact-active .box {
+  @apply bg-primary_dark;
+}
+.nuxt-link-exact-active .box .icon {
+  @apply text-white;
+}
+.container:hover .box {
+  @apply bg-primary_dark;
+}
+.container:hover .box {
+  @apply bg-primary_dark;
+}
+.container:hover .box .icon {
+  @apply text-white;
 }
 </style>

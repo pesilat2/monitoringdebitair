@@ -11,10 +11,20 @@
         >
           <div class="absolute bottom-0 w-full flex justify-center">
             <label
+              v-if="base64Url === null"
               for="imageInput"
               class="mx-auto cursor-pointer bg-[#7895CB] p-2 text-2xl text-white rounded-full w-12 h-12 flex items-center justify-center"
               ><i class="ri-image-edit-fill"></i
             ></label>
+            <div
+              v-else
+              class="mx-auto cursor-pointer bg-[#7895CB] p-2 text-2xl text-white rounded-full flex items-center justify-between space-x-4"
+            >
+              <button @click="cancelUpload">
+                <i class="ri-close-line"></i>
+              </button>
+              <button><i class="ri-check-line"></i></button>
+            </div>
             <input
               @change="previewFile"
               type="file"
@@ -69,37 +79,79 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 export default {
   props: {
     isEdit: Boolean,
   },
   data() {
     return {
-      previewUrl: null,
+      base64Url: null,
+      previewUrl: "",
     };
   },
   computed: {
     ...mapGetters(["loggedInUser"]),
   },
   methods: {
+    ...mapMutations(["addNotification"]),
     showEditForm() {
       this.$emit("showEditForm");
     },
 
-    previewFile(event) {
+    async previewFile(event) {
       const file = event.target.files[0];
-
       if (file) {
         const reader = new FileReader();
 
-        reader.onload = () => {
-          this.previewUrl = reader.result;
-        };
+        if (file.size > 1000000) {
+          this.addNotification({
+            status: "error",
+            message: "Ukuran file harus lebih kecil dari 1MB",
+          });
+          return;
+        }
 
+        reader.onload = async () => {
+          this.base64Url = reader.result;
+          try {
+            const res = await this.$axios.post("upload/images", {
+              image: this.base64Url,
+            });
+            this.previewUrl = res.data.url;
+          } catch (error) {
+            this.addNotification({
+              status: "error",
+              message: error.response.data.message,
+            });
+          }
+        };
         reader.readAsDataURL(file);
       }
-      console.log(this.previewUrl);
+    },
+    async upload() {
+      try {
+        await this.$axios.post("signup", {
+          image: this.base64Url,
+        });
+        this.addNotification({
+          status: "success",
+          message: "Photo profil berhasil di ubah",
+        });
+      } catch (error) {
+        this.addNotification({
+          status: "error",
+          message: error.response.data.message,
+        });
+      }
+    },
+    cancelUpload() {
+      this.base64Url = null;
+      this.previewUrl = "";
+      this.addNotification({
+        status: "success",
+        message: "Ubah photo profil di batalkan",
+      });
     },
   },
 };

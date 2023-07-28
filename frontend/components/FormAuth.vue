@@ -149,9 +149,6 @@ export default {
         }
       }
     },
-    onCloseNotification() {
-      this.closeNotification;
-    },
     navigate(route) {
       this.$router.push(`/${route}`);
     },

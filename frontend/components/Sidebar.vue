@@ -12,7 +12,7 @@
           Dashboard
         </h1>
       </div>
-      <div class="pt-10 px-9 flex flex-col gap-6">
+      <div class="pt-10 px-6 flex flex-col gap-6">
         <ButtonSidebar
           v-for="link of filteredLinks"
           :key="link.nama"

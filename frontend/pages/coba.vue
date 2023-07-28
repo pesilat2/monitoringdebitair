@@ -1,6 +1,7 @@
 <template>
-  <div>
+  <div :class="`bg-red-200 transition-all `" :style="{ width: `${waktu}%` }">
     <button @click="addNotification">{{ waktu }}</button>
+    div
   </div>
 </template>
 
@@ -36,3 +37,17 @@ export default {
   },
 };
 </script>
+
+<style>
+.progressAnimation {
+  animation: "progressAnimation 4s linear infinite";
+}
+@keyframes progressAnimation {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+}
+</style>
