@@ -120,6 +120,32 @@ const updateUser = async (user, userRole, userId, regionId) => {
   throw new AuthorizationError('Anda tidak berhak mengakses resource ini');
 };
 
+const updateUserProfile = async (userId, userData) => {
+  const existingUser = await User.findByPk(userId);
+  console.log('sebelum di update', existingUser.toJSON());
+  if (userData.fullname) {
+    existingUser.fullname = userData.fullname;
+  }
+  if (userData.email) {
+    existingUser.email = userData.email;
+  }
+  if (userData.imageProfile) {
+    existingUser.imageProfile = userData.imageProfile;
+  }
+  if (userData.age) {
+    existingUser.age = userData.age;
+  }
+  if (userData.isMarried !== undefined) {
+    existingUser.isMarried = userData.isMarried;
+  }
+  if (userData.gender) {
+    existingUser.gender = userData.gender;
+  }
+  await existingUser.save();
+  console.log('setelah di update', existingUser.toJSON());
+  return existingUser;
+};
+
 const deleteUserById = async (userId, userRole, regionId) => {
   if (userRole === 'ADMIN_UTAMA') {
     const user = await User.findOne({
@@ -150,6 +176,7 @@ module.exports = {
   findAllUser,
   findUserByEmail,
   findUserById,
+  updateUserProfile,
   updateUser,
   deleteUserById,
 };
