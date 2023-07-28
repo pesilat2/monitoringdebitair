@@ -5,32 +5,24 @@ module.exports = {
     await queryInterface.createTable('Orders', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
+      },
+      userId: {
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       deviceId: {
         type: Sequelize.STRING,
         allowNull: false,
-        references: {
-          model: 'Devices',
-          key: 'id',
-        },
-        onDelete: 'CASCADE',
       },
-      userId: {
-        allowNull: false,
-        primaryKey: true,
-        type: Sequelize.STRING,
-      },
-      amount_of_water: {
-        allowNull: false,
-        defaultValue: 0, // in litres of water per day (1 liter is equal to
+      quantity: {
         type: Sequelize.INTEGER,
-      },
-      total_cost: {
         allowNull: false,
+      },
+      totalPrice: {
         type: Sequelize.INTEGER,
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
@@ -46,3 +38,25 @@ module.exports = {
     await queryInterface.dropTable('Orders');
   },
 };
+
+// id: {
+//     type: DataTypes.STRING,
+//     allowNull: false,
+//     primaryKey: true,
+//   },
+//   userId: {
+//     type: DataTypes.STRING,
+//     allowNull: false,
+//   },
+//   deviceId: {
+//     type: DataTypes.STRING,
+//     allowNull: true,
+//   },
+//   quantity: {
+//     type: DataTypes.INTEGER,
+//     allowNull: false,
+//   },
+//   totalPrice: {
+//     type: DataTypes.INTEGER,
+//     allowNull: false,
+//   },

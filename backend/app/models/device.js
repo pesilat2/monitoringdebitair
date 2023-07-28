@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'id',
         onDelete: 'CASCADE',
       });
+      Device.hasMany(models.Order, {
+        foreignKey: 'id',
+        onDelete: 'CASCADE',
+      });
     }
   }
   Device.init({

@@ -21,7 +21,7 @@ const existingReport = async (deviceId) => {
   const report = await Report.findOne({ where: { deviceId } });
 
   if (report) {
-    throw new InvariantError(`Report untuk region dengan id '${deviceId}' sudah ada.`);
+    throw new InvariantError(`Report untuk device dengan id '${deviceId}' sudah ada.`);
   }
 
   return true;

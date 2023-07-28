@@ -9,6 +9,8 @@ const regionRoutes = require('./app/routes/region');
 const userRoutes = require('./app/routes/user');
 const deviceRoutes = require('./app/routes/device');
 const reportRoutes = require('./app/routes/report');
+const orderRoutes = require('./app/routes/order');
+const cloudinaryRoutes = require('./app/routes/cloudinary');
 const runSeeders = require('./seeders');
 const { errorHandler } = require('./app/middleware/errorHandler');
 
@@ -25,7 +27,9 @@ app.use('/', authRoutes);
 app.use('/', regionRoutes);
 app.use('/', reportRoutes);
 app.use('/', userRoutes);
+app.use('/', orderRoutes);
 app.use('/', deviceRoutes);
+app.use('/', cloudinaryRoutes);
 
 /** ENDPOINT SEEDERS */
 app.use('/seeders', (req, res) => {

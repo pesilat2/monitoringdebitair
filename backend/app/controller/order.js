@@ -1,45 +1,81 @@
-/* eslint-disable camelcase */
-const db = require('../models');
+const asyncHandler = require('express-async-handler');
+const NotFoundError = require('../exeptions/NotFoundError');
+const {
+  createOrder, findAllOrder, findOrderById, deleteOrderById,
+} = require('../service/orderService');
+const { Device } = require('../models');
+const AuthorizationError = require('../exeptions/AuthorizationError');
+const ClientError = require('../exeptions/ClientError');
 
-const { User, Order, Device } = db;
+const createOrderHandler = asyncHandler(async (req, res) => {
+  const { userId, deviceId, quantity } = req.body;
+  const {
+    id: adminId, role, regionId,
+  } = req.user;
 
-exports.createOrder = async (req, res) => {
-  if (!req.body.deviceId) {
-    res.status(400).json({
-      request_status: false,
-      message: 'Isi deviceId terlebih dahulu',
-    });
-    return;
+  const device = await Device.findByPk(deviceId);
+  if (!device) {
+    throw new NotFoundError('Perangkat tidak ditemukan');
   }
-  if (!req.body.amount_of_water) {
-    res.status(400).json({
-      request_status: false,
-      message: 'Isi jumlah air yang ingin dibeli terlebih dahulu',
-    });
-    return;
+  if (role === 'ADMIN_DAERAH' && device.regionId !== regionId) {
+    throw new AuthorizationError('Anda tidak berhak mengakses resource ini');
   }
-  // eslint-disable-next-line no-undef
-  const cost = amount_of_water * Device.price;
+  if (quantity > device.max) {
+    throw new ClientError('Jumlah order melebihi ketersediaan air');
+  }
 
-  const inputOrder = {
-    order_date: new Date(),
-    deviceId: req.body.deviceId,
-    userId: req.body.User,
-    total_cost: cost,
-  };
-
-  await Order.create(inputOrder);
-
-  console.log('>> Berhasil membuat order');
-
-  res.json({
-    request_status: true,
-    message: 'Pembelian berhasil. Jangan lupa order lagi ya!',
+  const totalPrice = quantity * device.price;
+  const { id: orderId } = await createOrder({
+    adminId, userId, deviceId, quantity, totalPrice,
+  });
+  device.max -= quantity;
+  await device.save();
+  res.status(201).json({
+    status: 'success',
+    message: `successfully ordered by admin id ${adminId}`,
     data: {
-      order_date: inputOrder.order_date,
-      deviceId: inputOrder.deviceId,
-      userId: inputOrder.userId,
-      total_cost: inputOrder.total_cost,
+      orderId,
+      userId,
+      deviceId,
+      quantity,
+      totalPrice,
     },
   });
+});
+
+const getAllOrderHandler = asyncHandler(async (req, res) => {
+  const { role, regionId } = req.user;
+
+  const order = await findAllOrder(role, regionId);
+  res.status(200).json({
+    status: 'success',
+    data: order,
+  });
+});
+
+const getOrderByIdHandler = asyncHandler(async (req, res) => {
+  const { id: orderId } = req.params;
+  const order = await findOrderById(orderId);
+
+  res.status(200).json({
+    status: 'success',
+    data: order,
+  });
+});
+
+const deleteOrderByIdHandler = asyncHandler(async (req, res) => {
+  const { id: orderId } = req.params;
+  await deleteOrderById(orderId);
+
+  res.status(200).json({
+    status: 'success',
+    message: `Successfuly deleted order with id ${orderId}`,
+  });
+});
+
+module.exports = {
+  createOrderHandler,
+  getAllOrderHandler,
+  getOrderByIdHandler,
+  deleteOrderByIdHandler,
 };
