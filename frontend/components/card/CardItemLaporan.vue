@@ -6,9 +6,9 @@
       </h3>
     </div>
     <div
-      class="pt-6 px-8 flex flex-wrap gap-6 lg:gap-0 justify-center lg:justify-between items-center"
+      class="pt-6 px-8 flex flex-wrap gap-6 lg:gap-0 justify-end lg:justify-between items-center"
     >
-      <div class="relative w-full lg:w-[50%]">
+      <div class="relative w-full lg:w-[50%] z-0">
         <input
           type="text"
           name="search"
@@ -21,23 +21,22 @@
           <i class="ri-search-line"></i>
         </span>
       </div>
-      <!-- <div class="flex">
-        <h3
-          class="bg-primary text-[#ffffff] py-1 px-3 lg:py-3 lg:px-5 text-heading-5 lg:text-heading-4 rounded-tl-2xl rounded-bl-2xl cursor-pointer"
+      <div>
+        <button
+          v-if="dashboardType === 'daftarPerangkat'"
+          class="bg-primary text-white px-4 py-3 rounded-lg transition duration-300 ease-in-out"
+          @click="openConfirmationDevice"
         >
-          Day
-        </h3>
-        <h3
-          class="border-2 border-primary text-primary py-1 px-3 lg:py-3 lg:px-5 text-heading-5 lg:text-heading-4 cursor-pointer"
+          Tambah Data
+        </button>
+        <button
+          v-if="dashboardType === 'daftarPengguna'"
+          class="bg-primary text-white px-4 py-3 rounded-lg transition duration-300 ease-in-out"
+          @click="openConfirmation"
         >
-          Week
-        </h3>
-        <h3
-          class="border-2 border-primary text-primary py-1 px-3 lg:py-3 lg:px-5 text-heading-5 lg:text-heading-4 rounded-tr-2xl rounded-br-2xl cursor-pointer"
-        >
-          Month
-        </h3>
-      </div> -->
+          Tambah Data
+        </button>
+      </div>
     </div>
     <div class="mt-4">
       <DashboardTable
@@ -45,8 +44,34 @@
         :tableData="filteredData"
         @user-changed="handleUserChanged"
         @delete-user="handleDeleteUser"
+        @device-changed="handleDeviceChanged"
+        @delete-device="handleDeleteDevice"
       />
     </div>
+    <PopupEdit
+      :showPopup="showConfirmation"
+      @update:showPopup="showConfirmation = $event"
+      :user="userData"
+      @confirmed="createUser(userData)"
+      title="Buat Akun Baru"
+      :type="createUserData"
+      :message="message"
+      :status="status"
+    />
+    <PopupAddDevice
+      :showPopup="showConfirmationDevice"
+      @update:showPopup="showConfirmationDevice = $event"
+      :device="deviceData"
+      @confirmed="createDevice(deviceData)"
+      title="Buat Perangkat Baru"
+      :message="message"
+      :status="status"
+    />
+    <Notification
+      :message="message"
+      :success="status === 'SUCCESS'"
+      @closeNotification="closeNotification"
+    />
   </div>
 </template>
 
@@ -79,6 +104,24 @@ export default {
   data() {
     return {
       search: "", // Tambahkan data search sebagai data reactive
+      showConfirmation: false,
+      showConfirmationDevice: false,
+      userData: {
+        // id: "",
+        nama: "",
+        email: "",
+        role: "",
+        password: "",
+      },
+      deviceData: {
+        id_region: "",
+        nama_perangkat: "",
+        maksimum_air: "",
+        harga: "",
+      },
+      createUserData: "create",
+      message: "",
+      status: "",
     };
   },
   watch: {
@@ -92,14 +135,17 @@ export default {
     },
   },
   computed: {
+    localTableData() {
+      return this.tableData;
+    },
     // Buat computed property untuk mendapatkan data yang telah difilter berdasarkan search
     filteredData() {
       if (this.search.trim() === "") {
         // Jika search kosong, tampilkan semua data
-        return this.tableData;
+        return this.localTableData;
       } else {
         // Jika search tidak kosong, filter data berdasarkan search
-        return this.tableData.filter((item) => {
+        return this.localTableData.filter((item) => {
           // Misalkan kita ingin mencari berdasarkan kolom "namaDaerah", sesuaikan dengan kolom yang diinginkan
           return item[this.searchByColumn]
             .toLowerCase()
@@ -127,6 +173,8 @@ export default {
           return "nama";
         case "pengguna":
           return "nama";
+        case "daftarPerangkat":
+          return "nama_perangkat";
         default:
           return "nama"; // Ganti dengan nilai default yang sesuai ( ini untuk manajement pengguna)
       }
@@ -136,7 +184,6 @@ export default {
       console.log(id, user);
       // Perbarui data yang diberikan oleh DashboardTable dengan nilai yang baru
       this.tableData = this.tableData.map((item) => {
-        console.log(item);
         if (item.id === id) {
           item.nama = user.nama;
           item.email = user.email;
@@ -146,7 +193,178 @@ export default {
       });
     },
     handleDeleteUser(id) {
-      this.tableData = this.tableData.filter((user) => user.id !== id);
+      // Cari indeks data yang dihapus dalam tableData
+      const deletedIndex = this.tableData.findIndex((item) => item.id === id);
+
+      // Jika indeks data yang dihapus ditemukan, hapus data tersebut dari array tableData
+      if (deletedIndex !== -1) {
+        this.tableData.splice(deletedIndex, 1);
+
+        // Perbarui kembali index untuk data-data yang ada setelah data yang dihapus
+        // dengan mengurangi 1 pada index-nya
+        for (let i = deletedIndex; i < this.tableData.length; i++) {
+          this.tableData[i].index -= 1;
+        }
+      }
+    },
+
+    resetFormData(data) {
+      data.nama = "";
+      data.email = "";
+      data.role = "";
+      data.password = "";
+      data.id_region = "";
+      data.nama_perangkat = "";
+      data.maksimum_air = "";
+      data.harga = "";
+    },
+    async createUser(userData) {
+      try {
+        // Kirim permintaan ke server untuk membuat pengguna baru
+        const response = await this.$axios.post("/signup", {
+          fullname: userData.nama,
+          email: userData.email,
+          role: userData.role,
+          password: userData.password,
+        });
+
+        // Jika permintaan berhasil dan server memberikan respons status 201 (Created)
+        if (response.status === 201) {
+          // Dapatkan ID pengguna baru dari respons server
+          const newUserId = response.data.data.id;
+          console.log(newUserId);
+
+          // Dapatkan indeks terakhir dalam tabel data saat ini
+          const lastItemIndex =
+            this.tableData.length > 0
+              ? this.tableData[this.tableData.length - 1].index
+              : 0;
+
+          const newUser = {
+            id: newUserId,
+            index: lastItemIndex + 1,
+            nama: userData.nama,
+            email: userData.email,
+            role: userData.role,
+          };
+          // Tambahkan pengguna baru ke dalam tabel data
+          this.tableData.push(newUser);
+
+          // Kosongkan nilai input setelah berhasil menambahkan data perangkat
+          this.resetFormData(userData);
+
+          // Beritahu pengguna bahwa pengguna baru telah dibuat dengan sukses (opsional)
+          this.message = "Pengguna baru berhasil dibuat!";
+          this.status = "SUCCESS";
+          this.showConfirmation = false;
+        } else {
+          // Jika server memberikan respons selain 201, maka tampilkan pesan kesalahan (opsional)
+          this.message = "Gagal membuat pengguna baru. Silakan coba lagi.";
+          this.status = "ERROR";
+        }
+      } catch (error) {
+        // Jika terjadi kesalahan pada permintaan atau server memberikan respons error, tampilkan pesan kesalahan (opsional)
+        this.message = error.response.data.message;
+        this.status = "ERROR";
+      }
+    },
+    openConfirmation() {
+      this.showConfirmation = true;
+      this.message = "";
+      this.status = "";
+    },
+
+    // device
+    openConfirmationDevice() {
+      this.showConfirmationDevice = true;
+    },
+
+    handleDeviceChanged(id, device) {
+      console.log(id, device);
+      // Perbarui data yang diberikan oleh DashboardTable dengan nilai yang baru
+      this.tableData = this.tableData.map((item) => {
+        if (item.id === id) {
+          item.id_region = device.id_region;
+          item.nama_perangkat = device.nama_perangkat;
+          item.maksimum_air = device.maksimum_air;
+          item.harga = device.harga;
+        }
+        return item;
+      });
+    },
+
+    handleDeleteDevice(id) {
+      // Cari indeks data yang dihapus dalam tableData
+      const deletedIndex = this.tableData.findIndex((item) => item.id === id);
+
+      // Jika indeks data yang dihapus ditemukan, hapus data tersebut dari array tableData
+      if (deletedIndex !== -1) {
+        this.tableData.splice(deletedIndex, 1);
+
+        // Perbarui kembali index untuk data-data yang ada setelah data yang dihapus
+        // dengan mengurangi 1 pada index-nya
+        for (let i = deletedIndex; i < this.tableData.length; i++) {
+          this.tableData[i].index -= 1;
+        }
+      }
+    },
+
+    async createDevice(deviceData) {
+      console.log(deviceData);
+      try {
+        // Kirim permintaan ke server untuk membuat pengguna baru
+        const response = await this.$axios.post("/devices", {
+          regionId: deviceData.id_region,
+          name: deviceData.nama_perangkat,
+          max: deviceData.maksimum_air,
+          price: deviceData.harga,
+        });
+
+        // Jika permintaan berhasil dan server memberikan respons status 201 (Created)
+        if (response.status === 201) {
+          // Dapatkan ID pengguna baru dari respons server
+
+          // Dapatkan indeks terakhir dalam tabel data saat ini
+          const lastItemIndex =
+            this.tableData.length > 0
+              ? this.tableData[this.tableData.length - 1].index
+              : 0;
+
+          const device = {
+            id: response.data.data.deviceId,
+            index: lastItemIndex + 1,
+            id_region: deviceData.id_region,
+            nama_perangkat: deviceData.nama_perangkat,
+            maksimum_air: deviceData.maksimum_air,
+            harga: deviceData.harga,
+          };
+
+          console.log(response);
+
+          // Tambahkan pengguna baru ke dalam tabel data
+          this.tableData.push(device);
+
+          // Kosongkan nilai input setelah berhasil menambahkan data perangkat
+          this.resetFormData(deviceData);
+
+          // Beritahu pengguna bahwa pengguna baru telah dibuat dengan sukses (opsional)
+          this.message = "Perangkat baru berhasil dibuat!";
+          this.status = "SUCCESS";
+          this.showConfirmationDevice = false;
+        } else {
+          // Jika server memberikan respons selain 201, maka tampilkan pesan kesalahan (opsional)
+          this.message = "Gagal membuat perangkat baru. Silakan coba lagi.";
+          this.status = "ERROR";
+        }
+      } catch (error) {
+        // Jika terjadi kesalahan pada permintaan atau server memberikan respons error, tampilkan pesan kesalahan (opsional)
+        this.message = error.response.data.message;
+        this.status = "ERROR";
+      }
+    },
+    closeNotification() {
+      this.message = "";
+      this.status = "";
     },
   },
 };

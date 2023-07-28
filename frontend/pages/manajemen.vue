@@ -42,6 +42,7 @@ export default {
           role: user.role,
         };
       });
+      console.log(users);
       this.tableData = users;
     } catch (err) {
       this.error = err;
