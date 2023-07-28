@@ -11,10 +11,20 @@ module.exports = {
       userId: {
         type: Sequelize.STRING,
         allowNull: false,
+        references: {
+          model: 'Users',
+          key: 'id',
+        },
+        onDelete: 'CASCADE',
       },
       deviceId: {
         type: Sequelize.STRING,
         allowNull: false,
+        references: {
+          model: 'Devices',
+          key: 'id',
+        },
+        onDelete: 'CASCADE',
       },
       quantity: {
         type: Sequelize.INTEGER,
@@ -38,25 +48,3 @@ module.exports = {
     await queryInterface.dropTable('Orders');
   },
 };
-
-// id: {
-//     type: DataTypes.STRING,
-//     allowNull: false,
-//     primaryKey: true,
-//   },
-//   userId: {
-//     type: DataTypes.STRING,
-//     allowNull: false,
-//   },
-//   deviceId: {
-//     type: DataTypes.STRING,
-//     allowNull: true,
-//   },
-//   quantity: {
-//     type: DataTypes.INTEGER,
-//     allowNull: false,
-//   },
-//   totalPrice: {
-//     type: DataTypes.INTEGER,
-//     allowNull: false,
-//   },

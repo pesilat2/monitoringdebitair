@@ -15,7 +15,7 @@ const router = express.Router();
 router.get('/reports', getAllReportHandler);
 router.get('/reports/:id', getReportByIdHandler);
 router.get('/report/devices', getAllReportByDevice);
-router.get('/report/:deviceId', getReportByDate);
+router.get('/report/devices', getReportByDate);
 router.put('/reports/:id', authCheck, adminCheck, updateReportByIdHandler);
 router.delete('/reports/:id', authCheck, adminCheck, deleteReportByIdHandler);
 router.post('/reports', authCheck, adminCheck, createReportHandler);
