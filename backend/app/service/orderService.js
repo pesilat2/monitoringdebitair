@@ -51,6 +51,11 @@ const findOrderById = async (orderId) => {
   return order;
 };
 
+const findOrderByUserId = async (userId) => {
+  const orders = await Order.findAll({ where: { userId } });
+  return orders;
+};
+
 const deleteOrderById = async (orderId) => {
   await Order.destroy({ where: { id: orderId } });
 };
@@ -58,5 +63,6 @@ module.exports = {
   createOrder,
   findAllOrder,
   findOrderById,
+  findOrderByUserId,
   deleteOrderById,
 };

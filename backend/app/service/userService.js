@@ -4,7 +4,6 @@ const { User } = require('../models');
 const InvariantError = require('../exeptions/InvariantError');
 const NotFoundError = require('../exeptions/NotFoundError');
 const AuthorizationError = require('../exeptions/AuthorizationError');
-const AuthenticationError = require('../exeptions/AuthenticationError');
 
 const findUserByEmail = async (email) => User.findOne({
   where: {

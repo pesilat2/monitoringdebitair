@@ -1,7 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const NotFoundError = require('../exeptions/NotFoundError');
 const {
-  createOrder, findAllOrder, findOrderById, deleteOrderById,
+  createOrder, findAllOrder, findOrderById, findOrderByUserId, deleteOrderById,
 } = require('../service/orderService');
 const { Device } = require('../models');
 const AuthorizationError = require('../exeptions/AuthorizationError');
@@ -63,6 +63,15 @@ const getOrderByIdHandler = asyncHandler(async (req, res) => {
   });
 });
 
+const getUserOrder = asyncHandler(async (req, res) => {
+  const { user } = req;
+  const userOrder = await findOrderByUserId(user.id);
+  res.status(200).json({
+    status: 'success',
+    data: userOrder,
+  });
+});
+
 const deleteOrderByIdHandler = asyncHandler(async (req, res) => {
   const { id: orderId } = req.params;
   await deleteOrderById(orderId);
@@ -77,5 +86,6 @@ module.exports = {
   createOrderHandler,
   getAllOrderHandler,
   getOrderByIdHandler,
+  getUserOrder,
   deleteOrderByIdHandler,
 };
