@@ -1,21 +1,38 @@
 <template>
-  <div class="flex justify-center items-center w-full">
-    <svg class="spinner" viewBox="0 0 50 50">
-      <circle
-        class="path"
-        cx="25"
-        cy="25"
-        r="20"
-        fill="none"
-        stroke-width="5"
-      ></circle>
-    </svg>
+  <div>
+    <button @click="addNotification">{{ waktu }}</button>
   </div>
 </template>
 
 <script>
 export default {
-  name: "Skeleton",
+  components: {
+    ImageUploader,
+  },
+  data() {
+    return {
+      waktu: 0,
+    };
+  },
+  methods: {
+    addNotification() {
+      this.$store.commit("addNotification", {
+        status: "success",
+        message: "ini percibaan",
+      });
+    },
+  },
+  mounted() {
+    const timeNow = Date.now();
+    const intervalId = setInterval(() => {
+      const timerun = Date.now();
+      const timeDiff = timerun - timeNow;
+      this.waktu = Math.round((timeDiff / 10000) * 100);
+      if (this.waktu > 100) {
+        clearInterval(intervalId);
+      }
+    });
+  },
 };
 </script>
 

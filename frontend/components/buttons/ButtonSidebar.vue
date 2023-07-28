@@ -38,6 +38,7 @@
 
 <script>
 import "remixicon/fonts/remixicon.css";
+import { mapMutations } from "vuex";
 
 export default {
   name: "ButtonSidebar",
@@ -48,11 +49,15 @@ export default {
     },
   },
   methods: {
+    ...mapMutations(["addNotification"]),
     logout(name) {
       console.log(name);
       if (name === "signout") {
-        console.log("masuk");
         this.$auth.logout();
+        this.addNotification({
+          status: "success",
+          message: "Anda Telah Keluar",
+        });
       }
     },
   },

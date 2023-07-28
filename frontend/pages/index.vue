@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import FormAuth from "@/components/FormAuth.vue";
+import FormAuth from "~/components/FormAuth.vue";
 export default {
   layout: "empty",
   // middleware: "guest",

@@ -25,7 +25,6 @@ export default {
       try {
         const formData = new FormData();
         formData.append("file", this.selectedImage);
-        formData.append("upload_preset", "stu6ldtq");
         const requestOptions = {
           headers: {
             // Hapus header Authorization dari permintaan

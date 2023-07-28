@@ -1,6 +1,9 @@
 <template>
   <div class="mb-4">
-    <label class="text-2xl font-normal text-[#7895CB] mb-2" :for="id"
+    <label
+      v-if="label"
+      class="text-2xl font-normal text-[#7895CB] mb-2"
+      :for="id"
       >{{ label }}:</label
     >
     <div

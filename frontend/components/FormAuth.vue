@@ -1,12 +1,5 @@
 <template>
   <div>
-    <Notification
-      :message="message"
-      :error="status === 'ERROR'"
-      :success="status === 'SUCCESS'"
-      :warning="status === 'WARNING'"
-      @closeNotification="closeNotification"
-    />
     <form @submit.prevent="submitForm()" class="w-full">
       <Input
         v-if="variant === 'REGISTER'"
@@ -15,7 +8,7 @@
         type="text"
         icon="ri-user-line"
         v-model="form.fullname"
-        @closeNotification="closeNotification"
+        @closeNotification="onCloseNotification"
         :autoFocus="true"
       />
       <Input
@@ -23,7 +16,7 @@
         id="email"
         type="email"
         icon="ri-mail-line"
-        @closeNotification="closeNotification"
+        @closeNotification="onCloseNotification"
         v-model="form.email"
       />
       <Input
@@ -31,7 +24,7 @@
         id="password"
         type="password"
         icon="ri-lock-line"
-        @closeNotification="closeNotification"
+        @closeNotification="onCloseNotification"
         v-model="form.password"
       />
       <div
@@ -46,7 +39,7 @@
         label="Desa"
         :data="dataRegions"
         id="desa"
-        @closeNotification="closeNotification"
+        @closeNotification="onCloseNotification"
         v-model="form.regionId"
       />
       <div class="flex justify-end mt-6">
@@ -65,6 +58,7 @@ import Input from "./inputs/Input.vue";
 import Select from "./inputs/Select.vue";
 import Button from "./Button.vue";
 import Notification from "./Notification.vue";
+import { mapMutations } from "vuex";
 
 export default {
   components: { Input, Button, Select, Notification },
@@ -79,8 +73,6 @@ export default {
         password: "",
         regionId: "",
       },
-      status: "",
-      message: "",
       dataRegions: [],
     };
   },
@@ -101,7 +93,11 @@ export default {
         this.error = err;
       });
   },
+  computed: {
+    ...mapMutations(["closeNotification"]),
+  },
   methods: {
+    ...mapMutations(["addNotification"]),
     async submitForm() {
       if (this.variant === "REGISTER") {
         try {
@@ -115,11 +111,15 @@ export default {
             password: "",
             regionId: "",
           };
-          this.message = "Daftar berhasil !";
-          this.status = "SUCCESS";
+          this.addNotification({
+            status: "success",
+            message: "anda berhasil daftar !",
+          });
         } catch (err) {
-          this.message = err.response.data.message;
-          this.status = "ERROR";
+          this.addNotification({
+            status: "error",
+            message: err.response.data.message,
+          });
         }
       } else if (this.variant === "LOGIN") {
         try {
@@ -137,24 +137,24 @@ export default {
           } else if (role === "ADMIN_DAERAH") {
             this.$router.push("/dashboard-admin-daerah");
           }
-          this.message = "Login Berhasil";
-          this.status = "SUCCESS";
+          this.addNotification({
+            status: "success",
+            message: "Anda berhasil masuk !",
+          });
         } catch (err) {
-          this.message = err.response.data.message;
-          this.status = "ERROR";
+          this.addNotification({
+            status: "error",
+            message: err.response.data.message,
+          });
         }
       }
     },
-    closeNotification() {
-      this.message = "";
-      this.status = "";
+    onCloseNotification() {
+      this.closeNotification;
     },
     navigate(route) {
       this.$router.push(`/${route}`);
     },
-  },
-  mounted() {
-    console.log(this.message);
   },
 };
 </script>

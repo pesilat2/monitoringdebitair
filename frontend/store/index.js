@@ -1,4 +1,24 @@
+export const state = () => ({
+  notification: {
+    message: "test",
+    status: "error",
+  },
+});
+
+export const mutations = {
+  closeNotification(state) {
+    state.notification.message = "";
+  },
+  addNotification(state, product) {
+    state.notification = product;
+  },
+  clearCart(state) {
+    state.items = [];
+  },
+};
+
 export const getters = {
+  notification: (state) => state.notification,
   isAuthenticated(state) {
     console.log(state.auth.loggedIn);
     return state.auth.loggedIn;
@@ -23,6 +43,11 @@ export const getters = {
         name: "dashboard",
         path: path,
         icon: "ri-home-4-fill",
+      },
+      {
+        name: "pemakaian",
+        path: "/pemakaian",
+        icon: "ri-order-play-line",
       },
       {
         name: "profile",
