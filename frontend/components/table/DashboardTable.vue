@@ -1,12 +1,20 @@
 <template>
   <div class="p-4">
     <div class="overflow-x-auto">
+      <Notification
+        :message="message"
+        :error="status === 'ERROR'"
+        :warning="status === 'WARNING'"
+        @closeNotification="closeNotification"
+      />
       <PopupEdit
         :showPopup="showConfirmation"
         @update:showPopup="showConfirmation = $event"
         :user="selectedUser"
         @confirmed="editUser(selectedUser)"
         title="Konfirmasi Perubahan"
+        :message="message"
+        :status="status"
       />
 
       <Popup
@@ -15,7 +23,30 @@
         @confirmed="deleteUser(selectedUserId)"
         title="Konfirmasi Penghapusan"
         message="Apakah anda yakin ingin menghapus akun ini?"
+        :messageToast="message"
+        :status="status"
       />
+
+      <Popup
+        :showPopup="showDeleteConfirmationDevice"
+        @update:showPopup="showDeleteConfirmationDevice = $event"
+        @confirmed="deleteDevice(selectedDeviceId)"
+        title="Konfirmasi Penghapusan"
+        message="Apakah anda yakin ingin menghapus perangkat ini?"
+        :messageToast="message"
+        :status="status"
+      />
+
+      <PopupAddDevice
+        :showPopup="showConfirmationDevice"
+        @update:showPopup="showConfirmationDevice = $event"
+        :device="selectedDevice"
+        @confirmed="editDevice(selectedDevice)"
+        title="Konfirmasi Perubahan"
+        :message="message"
+        :status="status"
+      />
+
       <table class="w-full table-auto">
         <!-- <colgroup>
           <col v-for="column in tableColumns" :key="column.key" />
@@ -25,7 +56,6 @@
             <th
               v-for="column in tableColumns"
               :key="column.key"
-              v-if="column.key !== 'id'"
               class="border-b border-primary_dark text-primary px-4 py-2 text-center text-heading-4"
             >
               {{ column.label }}
@@ -36,57 +66,28 @@
             >
               Aksi
             </th>
+            <th
+              class="border-b border-primary_dark text-primary px-4 py-2 text-center text-heading-4"
+              v-if="dashboardType === 'daftarPerangkat'"
+            >
+              Aksi
+            </th>
           </tr>
         </thead>
+        <!-- <tbody class="mt-8" v-if="loading">
+          <tr>
+            <td rowspan="6" colspan="6">
+              <SkletonDasboardTable />
+            </td>
+          </tr>
+        </tbody> -->
         <tbody>
           <tr v-for="item in displayedData" :key="item.id">
             <td
               v-for="column in tableColumns"
               :key="column.key"
-              v-if="column.key !== 'id'"
-              class="border-b border-primary_dark text-primary px-4 py-2 text-center text-base lg:text-lg"
+              class="border-b border-primary_dark text-primary px-4 py-2 text-center text-base lg:text-md"
             >
-              <!-- <template v-if="column.key === 'role'">
-                <div v-if="item[column.key] === 'USER'">
-                  <button
-                    class="outline"
-                    @click="openConfirmation(item.id, 'ADMIN_DAERAH')"
-                  >
-                    Admin Daerah
-                  </button>
-                  <button
-                    :class="{ active: item[column.key] === 'USER' }"
-                    class="pointer-events-none"
-                    @click="openConfirmation(item.id, 'USER')"
-                  >
-                    User
-                  </button>
-                </div>
-                <div v-else-if="item[column.key] === 'ADMIN_UTAMA'">
-                  <button
-                    :class="{ active: item[column.key] === 'ADMIN_UTAMA' }"
-                    class="pointer-events-none"
-                    disabled
-                  >
-                    Admin Utama
-                  </button>
-                </div>
-                <div v-else>
-                  <button
-                    class="outline"
-                    @click="openConfirmation(item.id, 'USER')"
-                  >
-                    User
-                  </button>
-                  <button
-                    :class="{ active: item[column.key] === 'ADMIN_DAERAH' }"
-                    class="pointer-events-none"
-                    @click="openConfirmation(item.id, 'ADMIN_DAERAH')"
-                  >
-                    Admin Daerah
-                  </button>
-                </div>
-              </template> -->
               <template>
                 {{
                   column.key === "jumlahPengguna"
@@ -114,6 +115,17 @@
                 <i class="ri-delete-bin-5-fill text-heading-4 text-primary"></i>
               </button>
             </td>
+            <td
+              v-if="dashboardType === 'daftarPerangkat'"
+              class="border-b border-primary_dark text-center text-base lg:text-lg"
+            >
+              <button @click="openConfirmationDevice(item)">
+                <i class="ri-edit-box-fill text-heading-4 text-primary"></i>
+              </button>
+              <button @click="openDeleteConfirmationDevice(item.id)">
+                <i class="ri-delete-bin-5-fill text-heading-4 text-primary"></i>
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -132,6 +144,8 @@
 import Pagination from "~/components/Pagination.vue";
 import Popup from "~/components/popup/Popup.vue";
 import PopupEdit from "../popup/PopupEdit.vue";
+import { mapState } from "vuex";
+import SkletonDasboardTable from "./SkletonDasboardTable.vue";
 
 export default {
   name: "DashboardTable",
@@ -149,6 +163,7 @@ export default {
     Pagination,
     Popup,
     PopupEdit,
+    SkletonDasboardTable,
   },
   data() {
     return {
@@ -158,9 +173,18 @@ export default {
       showDeleteConfirmation: false,
       selectedUser: null,
       selectedUserId: null,
+      selectedDevice: null,
+      selectedDeviceId: null,
+      showConfirmationDevice: false,
+      showDeleteConfirmationDevice: false,
+      message: "",
+      status: "",
     };
   },
   computed: {
+    ...mapState({
+      loading: (state) => state.loading.loading,
+    }),
     tableColumns() {
       switch (this.dashboardType) {
         case "adminUtama":
@@ -183,11 +207,18 @@ export default {
           ];
         case "daftarPengguna":
           return [
-            { key: "id", label: "Id" },
-            { key: "index", label: "Index" },
+            { key: "index", label: "No" },
             { key: "nama", label: "Nama" },
             { key: "email", label: "Email" },
             { key: "role", label: "Role" },
+          ];
+        case "daftarPerangkat":
+          return [
+            { key: "index", label: "No" },
+            { key: "id_region", label: "Id Region" },
+            { key: "nama_perangkat", label: "Nama Perangkat" },
+            { key: "maksimum_air", label: "Maksimal Air" },
+            { key: "harga", label: "Harga" },
           ];
         default:
           return [];
@@ -205,6 +236,9 @@ export default {
       return this.totalPages >= 1;
     },
   },
+  mounted() {
+    console.log(this.loading);
+  },
   methods: {
     // redirectToDetail(id) {
     //   // Navigasi ke halaman detail dengan parameter ID
@@ -213,17 +247,17 @@ export default {
     changePage(page) {
       this.currentPage = page;
     },
+
     async updateUser(id, userData) {
       try {
         // Kirim permintaan ke server untuk mengubah peran pengguna
         console.log(userData);
         const response = await this.$axios.put(`/update/user/${id}`, {
+          ...userData,
           fullname: userData.nama,
           email: userData.email,
           role: userData.role,
         });
-
-        console.log(response);
 
         // Jika permintaan berhasil dan server memberikan respons status 200 (OK)
         if (response.status === 200) {
@@ -231,14 +265,18 @@ export default {
           this.$emit("user-changed", id, userData);
 
           // Beritahu pengguna bahwa peran telah diubah dengan sukses (opsional)
-          alert("Peran pengguna berhasil diubah.");
+          this.message = "Peran pengguna berhasil diubah.";
+          this.status = "SUCCESS";
+          this.showConfirmation = false;
         } else {
+          this.message = "Gagal mengubah peran pengguna.";
+          this.status = "ERROR";
           // Jika server memberikan respons selain 200, maka tampilkan pesan kesalahan (opsional)
-          alert("Gagal mengubah peran pengguna. Silakan coba lagi.");
         }
       } catch (error) {
+        this.message = error.response.data.message;
+        this.status = "ERROR";
         // Jika terjadi kesalahan pada permintaan atau server memberikan respons error, tampilkan pesan kesalahan (opsional)
-        console.log(error);
       }
     },
 
@@ -250,36 +288,125 @@ export default {
         role: item.role, // Copy the role property to role
       };
       this.showConfirmation = true;
+      this.message = "";
+      this.status = "";
     },
     async editUser(userData) {
       try {
         if (!userData || !userData.id) {
           return;
         }
-
         await this.updateUser(userData.id, userData);
       } catch (error) {
-        console.log(error);
-        alert("Terjadi kesalahan saat mengubah pengguna. Silakan coba lagi.");
+        this.message = error.response.data.message;
+        this.status = "ERROR";
       }
     },
     async deleteUser(id) {
       try {
-        const response = await this.$axios.delete(`/user/${id}`);
+        const response = await this.$axios.delete(`/delete/user/${id}`);
         if (response.status === 200) {
           this.$emit("delete-user", id);
-          alert("Pengguna berhasil dihapus.");
+          this.message = "Pengguna berhasil dihapus.";
+          this.status = "SUCCESS";
+          this.showDeleteConfirmation = false;
         } else {
-          alert("Gagal menghapus pengguna. Silakan coba lagi.");
+          this.message = "Gagal menghapus pengguna.";
+          this.status = "ERROR";
         }
       } catch (error) {
-        console.log(error);
-        alert("Terjadi kesalahan saat menghapus pengguna. Silakan coba lagi.");
+        this.message = error.response.data.message;
+        this.status = "ERROR";
       }
     },
     openDeleteConfirmation(id) {
       this.selectedUserId = id;
       this.showDeleteConfirmation = true;
+    },
+
+    // untuk menampilkan popup management device
+    openConfirmationDevice(item) {
+      this.selectedDevice = {
+        ...item,
+        id_region: item.id_region,
+        nama_perangkat: item.nama_perangkat,
+        maksimum_air: item.maksimum_air,
+        harga: item.harga,
+      };
+      this.showConfirmationDevice = true;
+      this.message = "";
+      this.status = "";
+    },
+
+    async editDevice(deviceData) {
+      console.log(deviceData);
+      try {
+        if (!deviceData || !deviceData.id) {
+          return;
+        }
+        await this.updateDevice(deviceData.id, deviceData);
+      } catch (error) {
+        this.message = error.response.data.message;
+        this.status = "ERROR";
+      }
+    },
+
+    async updateDevice(id, deviceData) {
+      try {
+        // Kirim permintaan ke server untuk mengubah peran pengguna
+        console.log(deviceData);
+        const response = await this.$axios.put(`/devices/${id}`, {
+          ...deviceData,
+          regionId: deviceData.id_region,
+          name: deviceData.nama_perangkat,
+          max: deviceData.maksimum_air,
+          price: deviceData.harga,
+        });
+
+        // Jika permintaan berhasil dan server memberikan respons status 200 (OK)
+        if (response.status === 200) {
+          // Emit event untuk memberi tahu parent bahwa peran telah diubah
+          this.$emit("device-changed", id, deviceData);
+
+          // Beritahu pengguna bahwa peran telah diubah dengan sukses (opsional)
+          this.message = "Perangkat berhasil diubah.";
+          this.status = "SUCCESS";
+          this.showConfirmationDevice = false;
+        } else {
+          // Jika server memberikan respons selain 200, maka tampilkan pesan kesalahan (opsional)
+          this.message = "Gagal mengubah perangkat.";
+          this.status = "ERROR";
+        }
+      } catch (error) {
+        this.message = error.response.data.message;
+        this.status = "ERROR";
+      }
+    },
+    openDeleteConfirmationDevice(id) {
+      this.selectedDeviceId = id;
+      this.showDeleteConfirmationDevice = true;
+    },
+
+    async deleteDevice(id) {
+      try {
+        const response = await this.$axios.delete(`/devices/${id}`);
+        if (response.status === 200) {
+          this.$emit("delete-device", id);
+          this.message = "Perangkat berhasil dihapus.";
+          this.status = "SUCCESS";
+          this.showDeleteConfirmationDevice = false;
+        } else {
+          this.message = "Gagal menghapus Perangkat.";
+          this.status = "ERROR";
+        }
+      } catch (error) {
+        this.message = error.response.data.message;
+        this.status = "ERROR";
+      }
+    },
+    closeNotification() {
+      this.message = "";
+      this.status = "";
     },
   },
 };

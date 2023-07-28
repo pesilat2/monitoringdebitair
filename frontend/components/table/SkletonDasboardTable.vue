@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-center items-center w-full">
+  <div>
     <svg class="spinner" viewBox="0 0 50 50">
       <circle
         class="path"
@@ -23,9 +23,6 @@ export default {
 .spinner {
   animation: rotate 2s linear infinite;
   z-index: 2;
-  position: absolute;
-  top: 50%;
-  left: 50%;
   margin: -25px 0 0 -25px;
   width: 50px;
   height: 50px;

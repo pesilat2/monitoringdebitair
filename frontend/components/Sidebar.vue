@@ -1,7 +1,7 @@
 <template>
   <section>
     <div
-      class="hidden -left-full top-0 lg:opacity-100 lg:left-0 lg:block min-h-screen h-full w-[354px] bg-white shadow-2xl z-50 relative"
+      class="hidden -left-full top-0 lg:opacity-100 lg:left-0 lg:block min-h-screen h-full w-[354px] bg-white shadow-2xl z-20 relative"
       :class="{ active: showNavbar, closing: isClosing }"
     >
       <div class="absolute top-0 right-0 lg:hidden" @click="toggleNavbar">
@@ -22,8 +22,8 @@
       </div>
     </div>
     <div
-      class="overlay"
-      :class="{ active: showOverlay, closing: isClosing }"
+      class="overlay z-10"
+      :class="{ showActive: showOverlay, closing: isClosing }"
       @click="toggleNavbar"
     ></div>
   </section>
@@ -84,12 +84,12 @@ export default {
   transition: opacity 0.3s ease-in-out;
 }
 
-.overlay.active {
-  @apply opacity-100 pointer-events-auto cursor-pointer;
+.overlay.showActive {
+  @apply opacity-100 pointer-events-auto cursor-pointer w-full h-full;
 }
 
 .active {
-  @apply absolute block;
+  @apply fixed block;
   animation: slideIn 0.5s ease forwards;
 }
 

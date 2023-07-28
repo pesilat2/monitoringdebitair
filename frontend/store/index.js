@@ -35,6 +35,12 @@ export const getters = {
         icon: "ri-git-repository-fill",
         type: "ADMIN_UTAMA",
       },
+      {
+        name: "manajemen perangkat",
+        path: "/perangkat",
+        icon: "ri-rfid-line",
+        type: "ADMIN_UTAMA",
+      },
     ];
     return links;
   },

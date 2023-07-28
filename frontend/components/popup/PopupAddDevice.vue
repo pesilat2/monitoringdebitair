@@ -13,42 +13,47 @@
       <h2 class="text-lg font-semibold mb-4">{{ title }}</h2>
       <form @submit.prevent="confirmAction">
         <div class="mb-4">
-          <label for="name" class="block font-medium">Nama</label>
+          <label for="name" class="block font-medium">Nama Perangkat</label>
           <input
-            v-model="user.nama"
+            v-model="device.nama_perangkat"
             type="text"
             id="name"
             class="w-full border border-gray-300 rounded-lg px-4 py-2"
           />
         </div>
         <div class="mb-4">
-          <label for="email" class="block font-medium">Email</label>
+          <label for="max" class="block font-medium">Maksimum Air</label>
           <input
-            v-model="user.email"
-            type="email"
-            id="email"
-            class="w-full border border-gray-300 rounded-lg px-4 py-2"
-          />
-        </div>
-        <div v-if="type === 'create'" class="mb-4">
-          <label for="password" class="block font-medium">Password</label>
-          <input
-            v-model="user.password"
-            type="password"
-            id="password"
+            v-model="device.maksimum_air"
+            type="text"
+            id="max"
             class="w-full border border-gray-300 rounded-lg px-4 py-2"
           />
         </div>
         <div class="mb-4">
-          <label for="role" class="block font-medium">Role</label>
+          <label for="price" class="block font-medium">Harga</label>
+          <input
+            v-model="device.harga"
+            type="text"
+            id="price"
+            class="w-full border border-gray-300 rounded-lg px-4 py-2"
+          />
+        </div>
+        <div class="mb-4">
+          <label for="regionId" class="block font-medium">Desa</label>
           <select
-            v-model="user.role"
-            id="role"
+            v-model="device.id_region"
+            id="regionId"
             class="w-full border border-gray-300 rounded-lg px-4 py-2"
           >
-            <option selected disabled value="">Silahkan Pilih Role</option>
-            <option value="USER">User</option>
-            <option value="ADMIN_DAERAH">Admin Daerah</option>
+            <option selected disabled value="">Silahkan Pilih Desa</option>
+            <option
+              v-for="region in dataRegions"
+              :key="region.id"
+              :value="region.id"
+            >
+              {{ region.name }}
+            </option>
           </select>
         </div>
 
@@ -84,13 +89,13 @@ export default {
     data: {
       type: Array,
     },
-    user: {
+    device: {
       type: Object,
       default: () => ({
-        nama: "",
-        email: "",
-        role: "",
-        password: "",
+        id_region: "",
+        nama_perangkat: "",
+        maksimum_air: "",
+        harga: "",
       }),
     },
     type: {
@@ -101,16 +106,24 @@ export default {
   },
   data() {
     return {
-      // userData: {
-      //   id: "",
-      //   nama: "",
-      //   email: "",
-      //   role: "",
-      // },
+      dataRegions: [],
     };
   },
-  mounted() {
-    console.log(this.status);
+  async fetch() {
+    await this.$axios
+      .$get("/regions")
+      .then((data) => {
+        const regions = data.data.regions.map((region) => {
+          return {
+            id: region.id,
+            name: region.name,
+          };
+        });
+        this.dataRegions = regions;
+      })
+      .catch((err) => {
+        this.error = err;
+      });
   },
   methods: {
     closePopup() {
