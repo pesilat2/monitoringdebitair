@@ -27,7 +27,7 @@ export default {
       titleCard: "Daftar Pengguna",
       placeholderCard: "Cari Pengguna...",
       tableData: [],
-      dashboardType: "daftarPengguna",
+      dashboardType: "daftarPenggunaDaerah",
     };
   },
   async fetch() {
@@ -43,7 +43,6 @@ export default {
           regionId: user.regionId,
         };
       });
-      console.log(data);
       this.tableData = users;
     } catch (err) {
       this.error = err;

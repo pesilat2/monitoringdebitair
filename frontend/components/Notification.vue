@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="`absolute right-4 top-4 scale-0  z-10 transition-transform duration-300  ease-out   ${
+    :class="`absolute right-4 top-4 scale-0  z-[100] transition-transform duration-300  ease-out   ${
       notification.message && ' scale-100 popup overlay'
     }`"
   >

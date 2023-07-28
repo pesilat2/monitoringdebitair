@@ -1,20 +1,20 @@
 <template>
   <div class="p-4">
     <div class="overflow-x-auto">
-      <Notification
-        :message="message"
-        :error="status === 'ERROR'"
-        :warning="status === 'WARNING'"
-        @closeNotification="closeNotification"
-      />
       <PopupEdit
         :showPopup="showConfirmation"
         @update:showPopup="showConfirmation = $event"
         :user="selectedUser"
         @confirmed="editUser(selectedUser)"
         title="Konfirmasi Perubahan"
-        :message="message"
-        :status="status"
+      />
+      <PopupEdit
+        :showPopup="showConfirmationUserRegion"
+        @update:showPopup="showConfirmationUserRegion = $event"
+        :user="selectedUserRegion"
+        @confirmed="editUserRegion(selectedUserRegion)"
+        title="Konfirmasi Perubahan"
+        type="editUserDaerah"
       />
 
       <Popup
@@ -23,8 +23,14 @@
         @confirmed="deleteUser(selectedUserId)"
         title="Konfirmasi Penghapusan"
         message="Apakah anda yakin ingin menghapus akun ini?"
-        :messageToast="message"
-        :status="status"
+      />
+
+      <Popup
+        :showPopup="showDeleteConfirmationUserRegion"
+        @update:showPopup="showDeleteConfirmationUserRegion = $event"
+        @confirmed="deleteUserRegion(selectedUserRegionId)"
+        title="Konfirmasi Penghapusan"
+        message="Apakah anda yakin ingin menghapus akun ini?"
       />
 
       <Popup
@@ -33,8 +39,14 @@
         @confirmed="deleteDevice(selectedDeviceId)"
         title="Konfirmasi Penghapusan"
         message="Apakah anda yakin ingin menghapus perangkat ini?"
-        :messageToast="message"
-        :status="status"
+      />
+
+      <Popup
+        :showPopup="showDeleteConfirmationRegion"
+        @update:showPopup="showDeleteConfirmationRegion = $event"
+        @confirmed="deleteRegion(selectedRegionId)"
+        title="Konfirmasi Penghapusan"
+        message="Apakah anda yakin ingin menghapus perangkat ini?"
       />
 
       <PopupAddDevice
@@ -43,8 +55,14 @@
         :device="selectedDevice"
         @confirmed="editDevice(selectedDevice)"
         title="Konfirmasi Perubahan"
-        :message="message"
-        :status="status"
+      />
+
+      <PopupAddRegion
+        :showPopup="showConfirmationRegion"
+        @update:showPopup="showConfirmationRegion = $event"
+        :region="selectedRegion"
+        @confirmed="editRegion(selectedRegion)"
+        title="Konfirmasi Perubahan"
       />
 
       <table class="w-full table-auto">
@@ -68,7 +86,19 @@
             </th>
             <th
               class="border-b border-primary_dark text-primary px-4 py-2 text-center text-heading-4"
+              v-if="dashboardType === 'daftarPenggunaDaerah'"
+            >
+              Aksi
+            </th>
+            <th
+              class="border-b border-primary_dark text-primary px-4 py-2 text-center text-heading-4"
               v-if="dashboardType === 'daftarPerangkat'"
+            >
+              Aksi
+            </th>
+            <th
+              class="border-b border-primary_dark text-primary px-4 py-2 text-center text-heading-4"
+              v-if="dashboardType === 'daftarDesa'"
             >
               Aksi
             </th>
@@ -106,13 +136,36 @@
                 @click="openConfirmation(item)"
                 :disabled="item.role === 'ADMIN_UTAMA'"
               >
-                <i class="ri-edit-box-fill text-heading-4 text-primary"></i>
+                <i class="ri-edit-box-fill text-heading-4 text-green-600"></i>
               </button>
               <button
                 @click="openDeleteConfirmation(item.id)"
                 :disabled="item.role === 'ADMIN_UTAMA'"
               >
-                <i class="ri-delete-bin-5-fill text-heading-4 text-primary"></i>
+                <i class="ri-delete-bin-5-fill text-heading-4 text-red-600"></i>
+              </button>
+            </td>
+            <td
+              v-if="dashboardType === 'daftarPenggunaDaerah'"
+              class="border-b border-primary_dark text-center text-base lg:text-lg"
+            >
+              <button @click="openConfirmationUserRegion(item)">
+                <i class="ri-edit-box-fill text-heading-4 text-green-600"></i>
+              </button>
+              <button @click="openDeleteConfirmationUserRegion(item.id)">
+                <i class="ri-delete-bin-5-fill text-heading-4 text-red-600"></i>
+              </button>
+            </td>
+
+            <td
+              v-if="dashboardType === 'daftarDesa'"
+              class="border-b border-primary_dark text-center text-base lg:text-lg"
+            >
+              <button @click="openConfirmationRegion(item)">
+                <i class="ri-edit-box-fill text-heading-4 text-green-600"></i>
+              </button>
+              <button @click="openDeleteConfirmationRegion(item.id)">
+                <i class="ri-delete-bin-5-fill text-heading-4 text-red-600"></i>
               </button>
             </td>
             <td
@@ -120,10 +173,10 @@
               class="border-b border-primary_dark text-center text-base lg:text-lg"
             >
               <button @click="openConfirmationDevice(item)">
-                <i class="ri-edit-box-fill text-heading-4 text-primary"></i>
+                <i class="ri-edit-box-fill text-heading-4 text-green-600"></i>
               </button>
               <button @click="openDeleteConfirmationDevice(item.id)">
-                <i class="ri-delete-bin-5-fill text-heading-4 text-primary"></i>
+                <i class="ri-delete-bin-5-fill text-heading-4 text-red-600"></i>
               </button>
             </td>
           </tr>
@@ -144,7 +197,7 @@
 import Pagination from "~/components/Pagination.vue";
 import Popup from "~/components/popup/Popup.vue";
 import PopupEdit from "../popup/PopupEdit.vue";
-import { mapState } from "vuex";
+import { mapState, mapMutations, mapGetters } from "vuex";
 import SkletonDasboardTable from "./SkletonDasboardTable.vue";
 
 export default {
@@ -157,6 +210,9 @@ export default {
     tableData: {
       type: Array,
       required: true,
+    },
+    levelAccess: {
+      type: String,
     },
   },
   components: {
@@ -171,17 +227,25 @@ export default {
       itemsPerPage: 10, // Adjust this value as needed
       showConfirmation: false,
       showDeleteConfirmation: false,
+      showConfirmationUserRegion: false,
+      showDeleteConfirmationUserRegion: false,
       selectedUser: null,
       selectedUserId: null,
+      selectedUserRegion: null,
+      selectedUserRegionId: null,
       selectedDevice: null,
       selectedDeviceId: null,
       showConfirmationDevice: false,
       showDeleteConfirmationDevice: false,
-      message: "",
-      status: "",
+      selectedRegion: null,
+      selectedRegionId: null,
+      showConfirmationRegion: false,
+      showDeleteConfirmationRegion: false,
     };
   },
   computed: {
+    ...mapGetters(["loggedInUser"]),
+    ...mapMutations(["closeNotification"]),
     ...mapState({
       loading: (state) => state.loading.loading,
     }),
@@ -211,6 +275,14 @@ export default {
             { key: "nama", label: "Nama" },
             { key: "email", label: "Email" },
             { key: "role", label: "Role" },
+            { key: "regionId", label: "Id Region" },
+          ];
+        case "daftarPenggunaDaerah":
+          return [
+            { key: "index", label: "No" },
+            { key: "nama", label: "Nama" },
+            { key: "email", label: "Email" },
+            { key: "role", label: "Role" },
           ];
         case "daftarPerangkat":
           return [
@@ -219,6 +291,12 @@ export default {
             { key: "nama_perangkat", label: "Nama Perangkat" },
             { key: "maksimum_air", label: "Maksimal Air" },
             { key: "harga", label: "Harga" },
+          ];
+        case "daftarDesa":
+          return [
+            { key: "index", label: "No" },
+            { key: "id", label: "Id Region" },
+            { key: "nama", label: "Nama Desa" },
           ];
         default:
           return [];
@@ -237,9 +315,10 @@ export default {
     },
   },
   mounted() {
-    console.log(this.loading);
+    console.log(this.levelAccess);
   },
   methods: {
+    ...mapMutations(["addNotification"]),
     // redirectToDetail(id) {
     //   // Navigasi ke halaman detail dengan parameter ID
     //   this.$router.push(`/detail-user/${id}`);
@@ -251,12 +330,12 @@ export default {
     async updateUser(id, userData) {
       try {
         // Kirim permintaan ke server untuk mengubah peran pengguna
-        console.log(userData);
         const response = await this.$axios.put(`/update/user/${id}`, {
           ...userData,
           fullname: userData.nama,
           email: userData.email,
           role: userData.role,
+          regionId: userData.regionId,
         });
 
         // Jika permintaan berhasil dan server memberikan respons status 200 (OK)
@@ -265,17 +344,23 @@ export default {
           this.$emit("user-changed", id, userData);
 
           // Beritahu pengguna bahwa peran telah diubah dengan sukses (opsional)
-          this.message = "Peran pengguna berhasil diubah.";
-          this.status = "SUCCESS";
+          this.addNotification({
+            message: "Peran pengguna berhasil diubah.",
+            status: "success",
+          });
           this.showConfirmation = false;
         } else {
-          this.message = "Gagal mengubah peran pengguna.";
-          this.status = "ERROR";
+          this.addNotification({
+            message: "Gagal mengubah peran pengguna.",
+            status: "error",
+          });
           // Jika server memberikan respons selain 200, maka tampilkan pesan kesalahan (opsional)
         }
       } catch (error) {
-        this.message = error.response.data.message;
-        this.status = "ERROR";
+        this.addNotification({
+          message: error.response.data.message,
+          status: "error",
+        });
         // Jika terjadi kesalahan pada permintaan atau server memberikan respons error, tampilkan pesan kesalahan (opsional)
       }
     },
@@ -286,10 +371,9 @@ export default {
         fullname: item.nama, // Copy the fullname property to nama
         email: item.email,
         role: item.role, // Copy the role property to role
+        regionId: item.regionId,
       };
       this.showConfirmation = true;
-      this.message = "";
-      this.status = "";
     },
     async editUser(userData) {
       try {
@@ -298,8 +382,10 @@ export default {
         }
         await this.updateUser(userData.id, userData);
       } catch (error) {
-        this.message = error.response.data.message;
-        this.status = "ERROR";
+        this.addNotification({
+          message: error.response.data.message,
+          status: "error",
+        });
       }
     },
     async deleteUser(id) {
@@ -307,21 +393,117 @@ export default {
         const response = await this.$axios.delete(`/delete/user/${id}`);
         if (response.status === 200) {
           this.$emit("delete-user", id);
-          this.message = "Pengguna berhasil dihapus.";
-          this.status = "SUCCESS";
+          this.addNotification({
+            message: "Pengguna berhasil dihapus.",
+            status: "success",
+          });
           this.showDeleteConfirmation = false;
         } else {
-          this.message = "Gagal menghapus pengguna.";
-          this.status = "ERROR";
+          this.addNotification({
+            message: "Gagal menghapus pengguna.",
+            status: "error",
+          });
         }
       } catch (error) {
-        this.message = error.response.data.message;
-        this.status = "ERROR";
+        this.addNotification({
+          message: error.response.data.message,
+          status: "error",
+        });
       }
     },
     openDeleteConfirmation(id) {
       this.selectedUserId = id;
       this.showDeleteConfirmation = true;
+    },
+
+    // user by region
+    async updateUserRegion(id, userRegionData) {
+      try {
+        // Kirim permintaan ke server untuk mengubah peran pengguna
+        const response = await this.$axios.put(`/update/user/${id}`, {
+          ...userRegionData,
+          fullname: userRegionData.nama,
+          email: userRegionData.email,
+          role: userRegionData.role,
+          // regionId: this.loggedInUser.regionId
+        });
+
+        // Jika permintaan berhasil dan server memberikan respons status 200 (OK)
+        if (response.status === 200) {
+          // Emit event untuk memberi tahu parent bahwa peran telah diubah
+          this.$emit("user-region-changed", id, userRegionData);
+
+          // Beritahu pengguna bahwa peran telah diubah dengan sukses (opsional)
+          this.addNotification({
+            message: "Peran pengguna berhasil diubah.",
+            status: "success",
+          });
+          this.showConfirmationUserRegion = false;
+        } else {
+          this.addNotification({
+            message: "Gagal mengubah peran pengguna.",
+            status: "error",
+          });
+          // Jika server memberikan respons selain 200, maka tampilkan pesan kesalahan (opsional)
+        }
+      } catch (error) {
+        this.addNotification({
+          message: error.response.data.message,
+          status: "error",
+        });
+        // Jika terjadi kesalahan pada permintaan atau server memberikan respons error, tampilkan pesan kesalahan (opsional)
+      }
+    },
+
+    openConfirmationUserRegion(item) {
+      this.selectedUserRegion = {
+        ...item,
+        fullname: item.nama, // Copy the fullname property to nama
+        email: item.email,
+        role: item.role, // Copy the role property to role
+        // regionId: this.loggedInUser.regionId,
+      };
+      this.showConfirmationUserRegion = true;
+    },
+    async editUserRegion(userRegionData) {
+      try {
+        if (!userRegionData || !userRegionData.id) {
+          return;
+        }
+        await this.updateUserRegion(userRegionData.id, userRegionData);
+      } catch (error) {
+        this.addNotification({
+          message: error.response.data.message,
+          status: "error",
+        });
+      }
+    },
+    async deleteUserRegion(id) {
+      try {
+        const response = await this.$axios.delete(`/delete/user/${id}`);
+        if (response.status === 200) {
+          this.$emit("delete-user-region", id);
+          this.addNotification({
+            message: "Pengguna berhasil dihapus.",
+            status: "success",
+          });
+          this.showDeleteConfirmationUserRegion = false;
+        } else {
+          this.addNotification({
+            message: "Gagal menghapus pengguna.",
+            status: "error",
+          });
+        }
+      } catch (error) {
+        this.addNotification({
+          message: error.response.data.message,
+          status: "error",
+        });
+      }
+    },
+    openDeleteConfirmationUserRegion(id) {
+      this.selectedUserRegionId = id;
+      this.showDeleteConfirmationUserRegion = true;
     },
 
     // untuk menampilkan popup management device
@@ -334,8 +516,6 @@ export default {
         harga: item.harga,
       };
       this.showConfirmationDevice = true;
-      this.message = "";
-      this.status = "";
     },
 
     async editDevice(deviceData) {
@@ -369,17 +549,23 @@ export default {
           this.$emit("device-changed", id, deviceData);
 
           // Beritahu pengguna bahwa peran telah diubah dengan sukses (opsional)
-          this.message = "Perangkat berhasil diubah.";
-          this.status = "SUCCESS";
+          this.addNotification({
+            message: "Perangkat berhasil diubah.",
+            status: "success",
+          });
           this.showConfirmationDevice = false;
         } else {
+          this.addNotification({
+            message: "Gagal mengubah perangkat.",
+            status: "error",
+          });
           // Jika server memberikan respons selain 200, maka tampilkan pesan kesalahan (opsional)
-          this.message = "Gagal mengubah perangkat.";
-          this.status = "ERROR";
         }
       } catch (error) {
-        this.message = error.response.data.message;
-        this.status = "ERROR";
+        this.addNotification({
+          message: error.response.data.message,
+          status: "error",
+        });
       }
     },
     openDeleteConfirmationDevice(id) {
@@ -392,21 +578,123 @@ export default {
         const response = await this.$axios.delete(`/devices/${id}`);
         if (response.status === 200) {
           this.$emit("delete-device", id);
-          this.message = "Perangkat berhasil dihapus.";
-          this.status = "SUCCESS";
+          this.addNotification({
+            message: "Perangkat berhasil dihapus.",
+            status: "success",
+          });
           this.showDeleteConfirmationDevice = false;
         } else {
-          this.message = "Gagal menghapus Perangkat.";
-          this.status = "ERROR";
+          this.addNotification({
+            message: "Gagal menghapus perangkat.",
+            status: "error",
+          });
         }
+      } catch (error) {
+        this.addNotification({
+          message: error.response.data.message,
+          status: "error",
+        });
+      }
+    },
+
+    openConfirmationRegion(item) {
+      this.selectedRegion = {
+        ...item,
+        nama: item.nama,
+      };
+      this.showConfirmationRegion = true;
+    },
+
+    async editRegion(regionData) {
+      console.log(regionData);
+      try {
+        if (!regionData || !regionData.id) {
+          return;
+        }
+        await this.updateRegion(regionData.id, regionData);
       } catch (error) {
         this.message = error.response.data.message;
         this.status = "ERROR";
       }
     },
-    closeNotification() {
-      this.message = "";
-      this.status = "";
+
+    async updateRegion(id, regionData) {
+      try {
+        // Kirim permintaan ke server untuk mengubah peran pengguna
+
+        console.log(regionData);
+        const requestOptions = {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: regionData.nama,
+          }),
+        };
+
+        // const response = await this.$axios.put(`/regions/${id}`, {
+        //   // ...regionData,
+        //   name: regionData.nama,
+        // });
+
+        const response = await fetch(`/regions/${id}`, requestOptions);
+
+        console.log(response);
+
+        // Jika permintaan berhasil dan server memberikan respons status 200 (OK)
+        if (response.status === 200) {
+          // Emit event untuk memberi tahu parent bahwa peran telah diubah
+          this.$emit("region-changed", id, regionData);
+
+          // Beritahu pengguna bahwa peran telah diubah dengan sukses (opsional)
+          this.addNotification({
+            message: "Perangkat berhasil diubah.",
+            status: "success",
+          });
+          this.showConfirmationDevice = false;
+        } else {
+          this.addNotification({
+            message: "Gagal mengubah perangkat.",
+            status: "error",
+          });
+          // Jika server memberikan respons selain 200, maka tampilkan pesan kesalahan (opsional)
+        }
+      } catch (error) {
+        this.addNotification({
+          message: error.response.data.message,
+          status: "error",
+        });
+      }
+    },
+
+    openDeleteConfirmationRegion(id) {
+      this.selectedRegionId = id;
+      this.showDeleteConfirmationRegion = true;
+    },
+
+    async deleteRegion(id) {
+      try {
+        const response = await this.$axios.delete(`/regions/${id}`);
+        if (response.status === 200) {
+          this.$emit("delete-region", id);
+          this.addNotification({
+            message: "Perangkat berhasil dihapus.",
+            status: "success",
+          });
+          this.showDeleteConfirmationRegion = false;
+        } else {
+          this.addNotification({
+            message: "Gagal menghapus perangkat.",
+            status: "error",
+          });
+        }
+      } catch (error) {
+        this.addNotification({
+          message: error.response.data.message,
+          status: "error",
+        });
+      }
     },
   },
 };

@@ -57,7 +57,6 @@ export default {
   methods: {
     ...mapMutations(["addNotification"]),
     logout(name) {
-      console.log(name);
       if (name === "signout") {
         this.$auth.logout();
         this.addNotification({
