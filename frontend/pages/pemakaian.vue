@@ -1,9 +1,9 @@
 <template>
   <div class="w-full">
     <Header iconClasses="ri-order-play-line" title="pemakaian" />
-    <div class="p-4 w-full">
-      <OrderInput />
-      <OrderList />
+    <div class="p-6 w-full">
+      <OrderInput :dataOrder="dataOrder" @order-created="createOrder" />
+      <OrderList :listOrder="listOrder" />
     </div>
   </div>
 </template>
@@ -12,43 +12,64 @@
 import OrderInput from "~/components/OrderInput.vue";
 import OrderList from "~/components/OrderList.vue";
 import Header from "~/components/Header.vue";
+import { mapGetters } from "vuex";
 export default {
   components: {
     OrderInput,
     OrderList,
     Header,
   },
-  async createRegion(regionData) {
-    console.log("region data", regionData);
+  data() {
+    return {
+      listOrder: [],
+      dataOrder: {
+        water: 0,
+        regionId: "",
+        price: 0,
+      },
+    };
+  },
+  computed: {
+    ...mapGetters(["loggedInUser"]),
+  },
+  async createOrder(orderData) {
+    console.log("order data", orderData);
     try {
-      // Kirim permintaan ke server untuk membuat pengguna baru
-      const response = await this.$axios.post("/regions", {
-        name: regionData.nama,
+      // Kirim permintaan ke server untuk membuat order baru
+      const response = await this.$axios.post("/order", {
+        amount_of_water: orderData.water,
+        deviceId: this.loggedInUser.regionId,
+        userId: this.loggedInUser.Id,
+        total_cost: orderData.price,
       });
+
+      console.log("response", response);
 
       console.log("respon", response);
       if (response.status === 201) {
-        const newRegion = {
+        const newOrder = {
           index: 1,
-          id: response.data.data.regionId,
-          nama: regionData.nama,
+          regionId: this.loggedInUser.regionId,
+          userId: this.loggedInUser.Id,
+          water: orderData.water,
+          price: orderData.price,
         };
 
-        console.log("newRegion", newRegion);
+        console.log("newOrder", newOrder);
 
-        this.tableData.unshift(newRegion);
+        this.listOrder.unshift(newOrder);
 
-        for (let i = 1; i < this.tableData.length; i++) {
-          this.tableData[i].index = i + 1;
+        for (let i = 1; i < this.listOrder.length; i++) {
+          this.listOrder[i].index = i + 1;
         }
 
         this.addNotification({
-          message: "Desa baru berhasil dibuat!",
+          message: "Pembelian berhasil. Jangan lupa order lagi ya!",
           status: "success",
         });
       } else {
         this.addNotification({
-          message: "Gagal membuat desa baru. Silakan coba lagi.",
+          message: "Gagal membuat orderan baru. Silakan coba lagi.",
           status: "error",
         });
       }

@@ -523,7 +523,6 @@ export default {
 
     // region
     async createRegion(regionData) {
-      console.log("region data", regionData);
       try {
         // Kirim permintaan ke server untuk membuat pengguna baru
         // const response = await this.$axios.post("/regions", {
