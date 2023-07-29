@@ -29,7 +29,7 @@ export default {
     id: String,
     type: String,
     icon: String,
-    value: String,
+    value: [String, Number, Boolean],
     autoFocus: Boolean,
   },
   methods: {

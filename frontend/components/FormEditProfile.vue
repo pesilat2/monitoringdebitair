@@ -1,7 +1,7 @@
 <template>
   <div
-    :class="` col-span-3  bg-white h-full ${
-      isEdit ? 'md:col-span-2' : 'hidden'
+    :class="` bg-white h-full rounded-xl transition-all duration-300 ${
+      isEdit ? '  col-span-3 md:col-span-2 translate-x-[0]' : ' hidden'
     }`"
   >
     <div class="w-full py-6 px-10 border-b-2 border-[#4A55A2]">
@@ -24,13 +24,6 @@
           icon="ri-mail-line"
         />
         <Input
-          label="Alamat"
-          id="alamant"
-          type="text"
-          v-model="editForm.address"
-          icon="ri-lock-line"
-        />
-        <Input
           label="Umur"
           id="umur"
           type="date"
@@ -48,7 +41,7 @@
           label="Status Pernikahan"
           id="status pernikahan"
           :data="selectIsMarried"
-          v-model="editForm.maritalStatus"
+          v-model="editForm.isMarried"
           icon="ri-user-heart-line"
         />
       </form>
@@ -92,7 +85,6 @@ export default {
       editForm: {
         fullname: "",
         email: "",
-        address: "",
         age: "",
         gender: "",
         isMarried: "",
@@ -114,16 +106,28 @@ export default {
     ...mapMutations(["addNotification"]),
     closeEditForm() {
       this.$emit("closeEditForm");
+      this.editForm = {
+        fullname: this.loggedInUser.fullname,
+        email: this.loggedInUser.email,
+        age: this.loggedInUser.age,
+        gender: this.loggedInUser.gender,
+        isMarried: this.loggedInUser.isMarried,
+      };
     },
     async submitEditProfile() {
-      await this.$axios.put("/update/me", this.editForm);
+      await this.$axios.put("/update/me", {
+        ...this.editForm,
+      });
+      this.addNotification({
+        status: "success",
+        message: "Profile berhasil diubah",
+      });
     },
   },
   mounted() {
     this.editForm = {
       fullname: this.loggedInUser.fullname,
       email: this.loggedInUser.email,
-      address: this.loggedInUser.address,
       age: this.loggedInUser.age,
       gender: this.loggedInUser.gender,
       isMarried: this.loggedInUser.isMarried,

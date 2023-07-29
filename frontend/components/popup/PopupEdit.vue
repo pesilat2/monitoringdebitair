@@ -144,9 +144,6 @@ export default {
       this.error = error;
     }
   },
-  mounted() {
-    console.log(this.levelAccess);
-  },
   methods: {
     closePopup() {
       this.$emit("update:showPopup", false);

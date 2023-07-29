@@ -34,7 +34,7 @@ export default {
     label: String,
     data: Array,
     id: String,
-    value: String,
+    value: [String, Number, Boolean],
     icon: String,
   },
 };

@@ -1,7 +1,7 @@
 <template>
   <div
-    :class="`col-span-3 bg-white h-full pt-14 rounded-xl ${
-      isEdit ? 'lg:col-span-1' : ''
+    :class="`col-span-3 bg-white h-full pt-14 rounded-xl transition-transform duration-300 ${
+      isEdit ? 'lg:col-span-1 translate-x-[]' : ''
     } `"
   >
     <div class="mx-auto w-full">
@@ -36,7 +36,7 @@
 
           <img
             class="rounded-full mx-auto h-full w-full object-cover"
-            :src="previewUrl ? previewUrl : loggedInUser.imageProfile"
+            :src="base64Url ? base64Url : loggedInUser.imageProfile"
             alt="profile"
           />
         </div>
@@ -63,7 +63,7 @@
 
       <div class="w-full">
         <ItemProfile label="Alamat" :fill="loggedInUser.address || ''" />
-        <ItemProfile label="Umur" :fill="loggedInUser.age" />
+        <ItemProfile label="Umur" :fill="getAge" />
         <ItemProfile
           label="jenis Kelamin"
           :fill="loggedInUser.gender === 'MALE' ? 'Laki-Laki' : 'Perempuan'"
@@ -83,9 +83,6 @@ export default {
   props: {
     isEdit: Boolean,
   },
-  mounted() {
-    console.log(this.loggedInUser);
-  },
   data() {
     return {
       base64Url: null,
@@ -94,6 +91,10 @@ export default {
   },
   computed: {
     ...mapGetters(["loggedInUser"]),
+    getAge() {
+      const age = new Date().getFullYear() - this.loggedInUser.age;
+      return age + " Tahun";
+    },
   },
   methods: {
     ...mapMutations(["addNotification"]),
@@ -116,23 +117,23 @@ export default {
 
         reader.onload = async () => {
           this.base64Url = reader.result;
-          try {
-            const res = await this.$axios.post("upload/images", {
-              image: this.base64Url,
-            });
-            this.previewUrl = res.data.url;
-          } catch (error) {
-            this.addNotification({
-              status: "error",
-              message: error.response.data.message,
-            });
-          }
         };
         reader.readAsDataURL(file);
       }
     },
     async upload() {
       try {
+        try {
+          const res = await this.$axios.post("upload/images", {
+            image: this.base64Url,
+          });
+          this.previewUrl = res.data.url;
+        } catch (error) {
+          this.addNotification({
+            status: "error",
+            message: error.response.data.message,
+          });
+        }
         await this.$axios.put("update/me", {
           imageProfile: this.previewUrl,
         });

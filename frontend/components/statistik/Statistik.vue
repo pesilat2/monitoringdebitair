@@ -1,5 +1,7 @@
 <template>
-  <div :class="`col-span-${grid} bg-white p-4 rounded-xl shadow-xl w-full`">
+  <div
+    :class="`col-span-${grid} hover:shadow-custom2 transition-transform bg-white p-4 rounded-xl shadow-xl w-full`"
+  >
     <h1 class="text-heading-4 text-black font-heading-1">
       {{ label }}
     </h1>

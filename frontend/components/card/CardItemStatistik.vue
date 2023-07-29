@@ -1,5 +1,7 @@
 <template>
-  <div class="col-span-1 bg-white shadow-lg rounded-xl w-full">
+  <div
+    class="col-span-1 bg-white shadow-lg rounded-xl w-full hover:scale-105 shadow-md transition-transform"
+  >
     <div class="flex justify-between items-center px-5 py-4">
       <div>
         <h3 class="text-heading-4 text-black font-heading-1">Harian</h3>

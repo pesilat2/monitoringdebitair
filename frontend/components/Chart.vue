@@ -32,6 +32,11 @@ export default {
   components: {
     Statistik,
   },
+  async fetch() {
+    await this.$axios.$get("reports").then((data) => {
+      console.log(data);
+    });
+  },
   data() {
     return {
       chartData: {
