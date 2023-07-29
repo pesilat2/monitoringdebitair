@@ -3,12 +3,6 @@
     v-if="showPopup"
     class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-60"
   >
-    <Notification
-      :message="messageToast"
-      :error="status === 'ERROR'"
-      :warning="status === 'WARNING'"
-      @closeNotification="closeNotification"
-    />
     <div class="bg-white p-8 rounded-lg max-w-sm">
       <h2 class="text-lg font-semibold mb-4">{{ title }}</h2>
       <p class="text-base mb-6">{{ message }}</p>
@@ -44,8 +38,6 @@ export default {
       type: String,
       default: "Apakah Anda yakin?",
     },
-    status: String,
-    messageToast: String,
   },
   methods: {
     closePopup() {
@@ -53,10 +45,6 @@ export default {
     },
     confirmAction() {
       this.$emit("confirmed");
-    },
-    closeNotification() {
-      this.message = "";
-      this.status = "";
     },
   },
 };

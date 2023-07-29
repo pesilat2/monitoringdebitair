@@ -36,6 +36,20 @@
         >
           Tambah Data
         </button>
+        <button
+          v-if="dashboardType === 'daftarPenggunaDaerah'"
+          class="bg-primary text-white px-4 py-3 rounded-lg transition duration-300 ease-in-out"
+          @click="openConfirmationUserRegion"
+        >
+          Tambah Data
+        </button>
+        <button
+          v-if="dashboardType === 'daftarDesa'"
+          class="bg-primary text-white px-4 py-3 rounded-lg transition duration-300 ease-in-out"
+          @click="openConfirmationRegion"
+        >
+          Tambah Data
+        </button>
       </div>
     </div>
     <div class="mt-4">
@@ -44,8 +58,12 @@
         :tableData="filteredData"
         @user-changed="handleUserChanged"
         @delete-user="handleDeleteUser"
+        @user-region-changed="handleUserRegionChanged"
+        @delete-user-region="handleDeleteUserRegion"
         @device-changed="handleDeviceChanged"
         @delete-device="handleDeleteDevice"
+        @region-changed="handleRegionChanged"
+        @delete-region="handleDeleteRegion"
       />
     </div>
     <PopupEdit
@@ -55,8 +73,14 @@
       @confirmed="createUser(userData)"
       title="Buat Akun Baru"
       :type="createUserData"
-      :message="message"
-      :status="status"
+    />
+    <PopupEdit
+      :showPopup="showConfirmationUserRegion"
+      @update:showPopup="showConfirmationUserRegion = $event"
+      :user="userDataRegion"
+      @confirmed="createUserRegion(userDataRegion)"
+      title="Buat Akun Baru"
+      :type="createUserDataRegion"
     />
     <PopupAddDevice
       :showPopup="showConfirmationDevice"
@@ -64,19 +88,21 @@
       :device="deviceData"
       @confirmed="createDevice(deviceData)"
       title="Buat Perangkat Baru"
-      :message="message"
-      :status="status"
     />
-    <Notification
-      :message="message"
-      :success="status === 'SUCCESS'"
-      @closeNotification="closeNotification"
+    <PopupAddRegion
+      :showPopup="showConfirmationRegion"
+      @update:showPopup="showConfirmationRegion = $event"
+      :region="regionData"
+      @confirmed="createRegion(regionData)"
+      title="Buat Desa Baru"
     />
   </div>
 </template>
 
 <script>
 import DashboardTable from "~/components/table/DashboardTable.vue";
+import { mapGetters } from "vuex";
+import { mapMutations } from "vuex";
 
 export default {
   name: "CardItemLaporan",
@@ -106,12 +132,23 @@ export default {
       search: "", // Tambahkan data search sebagai data reactive
       showConfirmation: false,
       showConfirmationDevice: false,
+      showConfirmationRegion: false,
+      showConfirmationUserRegion: false,
       userData: {
+        // id: "",
+        nama: "",
+        email: "",
+        role: "USER",
+        password: "",
+        regionId: "",
+      },
+      userDataRegion: {
         // id: "",
         nama: "",
         email: "",
         role: "",
         password: "",
+        // regionId: this.loggedInUser.regionId,
       },
       deviceData: {
         id_region: "",
@@ -119,10 +156,16 @@ export default {
         maksimum_air: "",
         harga: "",
       },
+      regionData: {
+        // id: "",
+        nama: "",
+      },
       createUserData: "create",
-      message: "",
-      status: "",
+      createUserDataRegion: "createUserDaerah",
     };
+  },
+  mounted() {
+    console.log("carditem", this.userDataRegionComputed);
   },
   watch: {
     // Pantau perubahan pada properti dashboardType
@@ -135,6 +178,13 @@ export default {
     },
   },
   computed: {
+    ...mapGetters(["loggedInUser"]),
+    userDataRegionComputed() {
+      return {
+        ...this.userDataRegion,
+        regionId: this.loggedInUser.regionId,
+      };
+    },
     localTableData() {
       return this.tableData;
     },
@@ -153,8 +203,10 @@ export default {
         });
       }
     },
+    ...mapMutations(["closeNotification"]),
   },
   methods: {
+    ...mapMutations(["addNotification"]),
     // Fungsi ini akan dipanggil saat input search berubah
     filterData() {
       if (
@@ -188,6 +240,7 @@ export default {
           item.nama = user.nama;
           item.email = user.email;
           item.role = user.role;
+          item.regionId = user.regionId;
         }
         return item;
       });
@@ -207,16 +260,48 @@ export default {
         }
       }
     },
+    handleUserRegionChanged(id, userRegion) {
+      console.log(id, userRegion);
+      // Perbarui data yang diberikan oleh DashboardTable dengan nilai yang baru
+      this.tableData = this.tableData.map((item) => {
+        if (item.id === id) {
+          item.nama = userRegion.nama;
+          item.email = userRegion.email;
+          item.role = userRegion.role;
+        }
+        return item;
+      });
+    },
+    handleDeleteUserRegion(id) {
+      // Cari indeks data yang dihapus dalam tableData
+      const deletedIndex = this.tableData.findIndex((item) => item.id === id);
 
-    resetFormData(data) {
+      // Jika indeks data yang dihapus ditemukan, hapus data tersebut dari array tableData
+      if (deletedIndex !== -1) {
+        this.tableData.splice(deletedIndex, 1);
+
+        // Perbarui kembali index untuk data-data yang ada setelah data yang dihapus
+        // dengan mengurangi 1 pada index-nya
+        for (let i = deletedIndex; i < this.tableData.length; i++) {
+          this.tableData[i].index -= 1;
+        }
+      }
+    },
+    resetFormData(data, type) {
       data.nama = "";
       data.email = "";
       data.role = "";
+      if (type) {
+        data.role = "USER";
+      }
       data.password = "";
       data.id_region = "";
       data.nama_perangkat = "";
       data.maksimum_air = "";
       data.harga = "";
+      data.regionId = "";
+      data.index = "";
+      data.id = "";
     },
     async createUser(userData) {
       try {
@@ -226,6 +311,7 @@ export default {
           email: userData.email,
           role: userData.role,
           password: userData.password,
+          regionId: userData.regionId,
         });
 
         // Jika permintaan berhasil dan server memberikan respons status 201 (Created)
@@ -235,43 +321,112 @@ export default {
           console.log(newUserId);
 
           // Dapatkan indeks terakhir dalam tabel data saat ini
-          const lastItemIndex =
-            this.tableData.length > 0
-              ? this.tableData[this.tableData.length - 1].index
-              : 0;
 
           const newUser = {
             id: newUserId,
-            index: lastItemIndex + 1,
+            index: 1,
             nama: userData.nama,
             email: userData.email,
             role: userData.role,
+            regionId: userData.regionId,
           };
           // Tambahkan pengguna baru ke dalam tabel data
           this.tableData.push(newUser);
 
+          for (let i = 1; i < this.tableData.length; i++) {
+            this.tableData[i].index = i + 1;
+          }
+
           // Kosongkan nilai input setelah berhasil menambahkan data perangkat
-          this.resetFormData(userData);
+          this.resetFormData(userData, true);
 
           // Beritahu pengguna bahwa pengguna baru telah dibuat dengan sukses (opsional)
-          this.message = "Pengguna baru berhasil dibuat!";
-          this.status = "SUCCESS";
+          this.addNotification({
+            message: "Pengguna baru berhasil dibuat!",
+            status: "success",
+          });
           this.showConfirmation = false;
         } else {
           // Jika server memberikan respons selain 201, maka tampilkan pesan kesalahan (opsional)
-          this.message = "Gagal membuat pengguna baru. Silakan coba lagi.";
-          this.status = "ERROR";
+          this.addNotification({
+            message: "Gagal membuat pengguna baru. Silakan coba lagi.",
+            status: "error",
+          });
         }
       } catch (error) {
         // Jika terjadi kesalahan pada permintaan atau server memberikan respons error, tampilkan pesan kesalahan (opsional)
-        this.message = error.response.data.message;
-        this.status = "ERROR";
+        this.addNotification({
+          message: error.response.data.message,
+          status: "error",
+        });
       }
     },
     openConfirmation() {
       this.showConfirmation = true;
-      this.message = "";
-      this.status = "";
+    },
+
+    // Fungsi untuk membuat pengguna baru daerah
+    async createUserRegion(userDataRegion) {
+      try {
+        const regionId = this.userDataRegionComputed.regionId;
+        // Kirim permintaan ke server untuk membuat pengguna baru
+        const response = await this.$axios.post("/signup", {
+          fullname: userDataRegion.nama,
+          email: userDataRegion.email,
+          role: userDataRegion.role,
+          password: userDataRegion.password,
+          regionId: regionId,
+        });
+
+        // Jika permintaan berhasil dan server memberikan respons status 201 (Created)
+        if (response.status === 201) {
+          // Dapatkan ID pengguna baru dari respons server
+          const newUserId = response.data.data.id;
+          console.log(newUserId);
+
+          const newUser = {
+            id: newUserId,
+            index: 1,
+            nama: userDataRegion.nama,
+            email: userDataRegion.email,
+            role: userDataRegion.role,
+            regionId: regionId,
+          };
+
+          console.log("regionIdHarusMasuk", newUser);
+          // Tambahkan pengguna baru ke dalam tabel data
+          this.tableData.unshift(newUser);
+
+          for (let i = 1; i < this.tableData.length; i++) {
+            this.tableData[i].index = i + 1;
+          }
+
+          // Kosongkan nilai input setelah berhasil menambahkan data perangkat
+          this.resetFormData(userDataRegion);
+
+          // Beritahu pengguna bahwa pengguna baru telah dibuat dengan sukses (opsional)
+          this.addNotification({
+            message: "Pengguna baru berhasil dibuat!",
+            status: "success",
+          });
+          this.showConfirmationUserRegion = false;
+        } else {
+          // Jika server memberikan respons selain 201, maka tampilkan pesan kesalahan (opsional)
+          this.addNotification({
+            message: "Gagal membuat pengguna baru. Silakan coba lagi.",
+            status: "error",
+          });
+        }
+      } catch (error) {
+        // Jika terjadi kesalahan pada permintaan atau server memberikan respons error, tampilkan pesan kesalahan (opsional)
+        this.addNotification({
+          message: error.response.data.message,
+          status: "error",
+        });
+      }
+    },
+    openConfirmationUserRegion() {
+      this.showConfirmationUserRegion = true;
     },
 
     // device
@@ -323,16 +478,9 @@ export default {
         // Jika permintaan berhasil dan server memberikan respons status 201 (Created)
         if (response.status === 201) {
           // Dapatkan ID pengguna baru dari respons server
-
-          // Dapatkan indeks terakhir dalam tabel data saat ini
-          const lastItemIndex =
-            this.tableData.length > 0
-              ? this.tableData[this.tableData.length - 1].index
-              : 0;
-
           const device = {
             id: response.data.data.deviceId,
-            index: lastItemIndex + 1,
+            index: 1,
             id_region: deviceData.id_region,
             nama_perangkat: deviceData.nama_perangkat,
             maksimum_air: deviceData.maksimum_air,
@@ -344,27 +492,127 @@ export default {
           // Tambahkan pengguna baru ke dalam tabel data
           this.tableData.push(device);
 
+          for (let i = 1; i < this.tableData.length; i++) {
+            this.tableData[i].index = i + 1;
+          }
+
           // Kosongkan nilai input setelah berhasil menambahkan data perangkat
           this.resetFormData(deviceData);
 
           // Beritahu pengguna bahwa pengguna baru telah dibuat dengan sukses (opsional)
-          this.message = "Perangkat baru berhasil dibuat!";
-          this.status = "SUCCESS";
+          this.addNotification({
+            message: "Perangkat baru berhasil dibuat!",
+            status: "success",
+          });
           this.showConfirmationDevice = false;
         } else {
-          // Jika server memberikan respons selain 201, maka tampilkan pesan kesalahan (opsional)
-          this.message = "Gagal membuat perangkat baru. Silakan coba lagi.";
-          this.status = "ERROR";
+          this.addNotification({
+            // Jika server memberikan respons selain 201, maka tampilkan pesan kesalahan (opsional)
+            message: "Gagal membuat perangkat baru. Silahkan coba lagi",
+            status: "error",
+          });
         }
       } catch (error) {
         // Jika terjadi kesalahan pada permintaan atau server memberikan respons error, tampilkan pesan kesalahan (opsional)
-        this.message = error.response.data.message;
-        this.status = "ERROR";
+        this.addNotification({
+          message: error.response.data.message,
+          status: "error",
+        });
       }
     },
-    closeNotification() {
-      this.message = "";
-      this.status = "";
+
+    // region
+    async createRegion(regionData) {
+      console.log("region data", regionData);
+      try {
+        // Kirim permintaan ke server untuk membuat pengguna baru
+        // const response = await this.$axios.post("/regions", {
+        //   name: regionData.nama,
+        // });
+
+        const response = await fetch(
+          "https://monitoring-debit-air.vercel.app/api/regions",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: regionData.nama,
+            }),
+          }
+        );
+        console.log("respon", response);
+        // Jika permintaan berhasil dan server memberikan respons status 201 (Created)
+        if (response.status === 201) {
+          const newRegion = {
+            index: 1, // Set the new region's index to 1 since it will be placed at the beginning
+            id: response.data.data.regionId,
+            nama: regionData.nama,
+          };
+
+          console.log("newRegion", newRegion);
+
+          // Add the new region to the beginning of the tableData array using unshift
+          this.tableData.unshift(newRegion);
+
+          // Update the indices of existing regions by incrementing them by 1
+          for (let i = 1; i < this.tableData.length; i++) {
+            this.tableData[i].index = i + 1;
+          }
+
+          // Beritahu pengguna bahwa pengguna baru telah dibuat dengan sukses (opsional)
+          this.addNotification({
+            message: "Desa baru berhasil dibuat!",
+            status: "success",
+          });
+
+          this.showConfirmationRegion = false;
+          // this.resetFormData(newRegion);
+        } else {
+          // Jika server memberikan respons selain 201, maka tampilkan pesan kesalahan (opsional)
+          this.addNotification({
+            message: "Gagal membuat desa baru. Silakan coba lagi.",
+            status: "error",
+          });
+        }
+      } catch (error) {
+        // Jika terjadi kesalahan pada permintaan atau server memberikan respons error, tampilkan pesan kesalahan (opsional)
+        this.addNotification({
+          message: error.response.data.message,
+          status: "error",
+        });
+      }
+    },
+    openConfirmationRegion() {
+      this.showConfirmationRegion = true;
+    },
+
+    handleRegionChanged(id, region) {
+      console.log(id, region);
+      // Perbarui data yang diberikan oleh DashboardTable dengan nilai yang baru
+      this.tableData = this.tableData.map((item) => {
+        if (item.id === id) {
+          item.nama = region.nama;
+        }
+        return item;
+      });
+    },
+
+    handleDeleteRegion(id) {
+      // Cari indeks data yang dihapus dalam tableData
+      const deletedIndex = this.tableData.findIndex((item) => item.id === id);
+
+      // Jika indeks data yang dihapus ditemukan, hapus data tersebut dari array tableData
+      if (deletedIndex !== -1) {
+        this.tableData.splice(deletedIndex, 1);
+
+        // Perbarui kembali index untuk data-data yang ada setelah data yang dihapus
+        // dengan mengurangi 1 pada index-nya
+        for (let i = deletedIndex; i < this.tableData.length; i++) {
+          this.tableData[i].index -= 1;
+        }
+      }
     },
   },
 };

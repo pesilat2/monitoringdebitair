@@ -48,6 +48,7 @@ export const getters = {
         name: "pemakaian",
         path: "/pemakaian",
         icon: "ri-order-play-line",
+        type: "USER",
       },
       {
         name: "profile",
@@ -61,9 +62,21 @@ export const getters = {
         type: "ADMIN_UTAMA",
       },
       {
+        name: "manajemen pengguna",
+        path: "/manajemen-pengguna-daerah",
+        icon: "ri-git-repository-fill",
+        type: "ADMIN_DAERAH",
+      },
+      {
         name: "manajemen perangkat",
         path: "/perangkat",
         icon: "ri-rfid-line",
+        type: "ADMIN_UTAMA",
+      },
+      {
+        name: "manajemen desa",
+        path: "/desa",
+        icon: "ri-ancient-gate-fill",
         type: "ADMIN_UTAMA",
       },
     ];

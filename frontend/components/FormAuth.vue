@@ -8,7 +8,6 @@
         type="text"
         icon="ri-user-line"
         v-model="form.fullname"
-        @closeNotification="onCloseNotification"
         :autoFocus="true"
       />
       <Input
@@ -16,7 +15,6 @@
         id="email"
         type="email"
         icon="ri-mail-line"
-        @closeNotification="onCloseNotification"
         v-model="form.email"
       />
       <Input
@@ -24,7 +22,6 @@
         id="password"
         type="password"
         icon="ri-lock-line"
-        @closeNotification="onCloseNotification"
         v-model="form.password"
       />
       <div

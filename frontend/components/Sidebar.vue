@@ -1,7 +1,7 @@
 <template>
   <section>
     <div
-      class="hidden -left-full top-0 lg:opacity-100 lg:left-0 lg:block min-h-screen h-full w-[354px] bg-white shadow-2xl z-20 relative"
+      class="hidden -left-full top-0 lg:opacity-100 lg:left-0 lg:block min-h-screen h-full w-[300px] bg-white shadow-2xl z-20 relative"
       :class="{ active: showNavbar, closing: isClosing }"
     >
       <div class="absolute top-0 right-0 lg:hidden" @click="toggleNavbar">

@@ -15,36 +15,32 @@
 </template>
 
 <script>
-import Header from "~/components/Header.vue";
 export default {
-  components: {
-    Header,
-  },
   data() {
     return {
-      headerTitle: "Manajemen Pengguna",
-      headerClass: "ri-git-repository-fill text-heading-4 text-primary_dark",
-      titleCard: "Daftar Pengguna",
-      placeholderCard: "Cari Pengguna...",
+      headerTitle: "Manajemen Desa",
+      headerClass: "ri-ancient-gate-fill text-heading-4 text-primary_dark",
+      titleCard: "Daftar Desa",
+      placeholderCard: "Cari Nama Desa...",
       tableData: [],
-      dashboardType: "daftarPengguna",
+      dashboardType: "daftarDesa",
     };
   },
   async fetch() {
+    this.$store.commit("loading/setLoading", true);
     try {
-      const data = await this.$axios.$get("/findAll/users");
-      const users = data.data.map((user, index) => {
+      const data = await this.$axios.$get("/regions");
+      console.log(data);
+      const regions = data.data.regions.map((region, index) => {
         return {
-          id: user.id,
           index: index + 1,
-          nama: user.fullname,
-          email: user.email,
-          role: user.role,
-          regionId: user.regionId,
+          id: region.id,
+          nama: region.name,
         };
       });
-      console.log(data);
-      this.tableData = users;
+      console.log(regions);
+      this.tableData = regions;
+      this.$store.commit("loading/setLoading", false);
     } catch (err) {
       this.error = err;
       console.error(err);
@@ -52,3 +48,5 @@ export default {
   },
 };
 </script>
+
+<style></style>

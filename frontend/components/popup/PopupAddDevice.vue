@@ -3,12 +3,6 @@
     v-if="showPopup"
     class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-60"
   >
-    <Notification
-      :message="message"
-      :error="status === 'ERROR'"
-      :warning="status === 'WARNING'"
-      @closeNotification="closeNotification"
-    />
     <div class="bg-white p-8 rounded-lg w-full max-w-[500px]">
       <h2 class="text-lg font-semibold mb-4">{{ title }}</h2>
       <form @submit.prevent="confirmAction">
@@ -101,8 +95,6 @@ export default {
     type: {
       type: String,
     },
-    status: String,
-    message: String,
   },
   data() {
     return {
@@ -131,10 +123,6 @@ export default {
     },
     confirmAction() {
       this.$emit("confirmed");
-    },
-    closeNotification() {
-      this.message = "";
-      this.status = "";
     },
   },
 };
