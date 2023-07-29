@@ -1,5 +1,7 @@
 const { nanoid } = require('nanoid');
-const { Order, Device } = require('../models');
+const {
+  Order, Device, User, Region,
+} = require('../models');
 const NotFoundError = require('../exeptions/NotFoundError');
 const AuthorizationError = require('../exeptions/AuthorizationError');
 
@@ -20,7 +22,24 @@ const createOrder = async ({
 
 const findAllOrder = async (userRole, regionId) => {
   if (userRole === 'ADMIN_UTAMA') {
-    const orders = await Order.findAll();
+    const orders = await Order.findAll({
+      include: [
+        {
+          model: Device,
+          attributes: ['name', 'max', 'price'],
+          include: [
+            {
+              model: Region,
+              attributes: ['name'],
+            },
+          ],
+        },
+        {
+          model: User,
+          attributes: ['fullname', 'email'],
+        },
+      ],
+    });
     return orders;
   }
   if (userRole === 'ADMIN_DAERAH') {
@@ -36,6 +55,16 @@ const findAllOrder = async (userRole, regionId) => {
         {
           model: Device,
           attributes: ['name', 'max', 'price'],
+          include: [
+            {
+              model: Region,
+              attributes: ['name'],
+            },
+          ],
+        },
+        {
+          model: User,
+          attributes: ['fullname', 'email'],
         },
       ],
     });
@@ -72,6 +101,16 @@ const findOrderByUserId = async (userId) => {
       {
         model: Device,
         attributes: ['name', 'max', 'price'],
+        include: [
+          {
+            model: Region,
+            attributes: ['name'],
+          },
+        ],
+      },
+      {
+        model: User,
+        attributes: ['fullname', 'email'],
       },
     ],
   });
