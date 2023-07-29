@@ -69,14 +69,16 @@ export default {
   components: {
     Button,
   },
+  props: {
+    dataOrder: {
+      type: Object,
+    },
+    createOrder: {
+      type: Function,
+    },
+  },
   data() {
-    return {
-      dataOrder: {
-        water: 0,
-        regionId: "",
-        price: 0,
-      },
-    };
+    return {};
   },
   computed: {
     ...mapGetters(["loggedInUser"]),
@@ -94,7 +96,7 @@ export default {
         regionId: this.loggedInUser.regionId,
         price: this.sumPrice,
       };
-      console.log(this.dataOrder);
+      this.$emit("order-created", this.dataOrder);
     },
   },
 };

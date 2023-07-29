@@ -35,15 +35,11 @@ export default {
     Button,
     ItemOrder,
   },
+  props: {
+    listOrder: Array,
+  },
   data() {
-    return {
-      listOrder: [
-        { water: 6, regionId: "region4", price: 4000, id: 1 },
-        { water: 3, regionId: "region4", price: 6000, id: 2 },
-        { water: 7, regionId: "region4", price: 3000, id: 3 },
-        { water: 9, regionId: "region4", price: 6000, id: 4 },
-      ],
-    };
+    return {};
   },
   computed: {
     ...mapGetters(["loggedInUser"]),

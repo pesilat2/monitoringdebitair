@@ -523,7 +523,6 @@ export default {
 
     // region
     async createRegion(regionData) {
-      console.log("region data", regionData);
       try {
         // Kirim permintaan ke server untuk membuat pengguna baru
         // const response = await this.$axios.post("/regions", {
@@ -536,6 +535,7 @@ export default {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzZXItdmpPcjRNQ2tDbVJXZ1c0QXRvMGJBIiwiaWF0IjoxNjkwNTY5NzM0LCJleHAiOjE2OTA2NTYxMzR9.8z5K-Rldo1M_DcY7GNU5bZU5JIx8HMfJ8Ho1QkBCe8A`,
             },
             body: JSON.stringify({
               name: regionData.nama,
