@@ -34,7 +34,7 @@
           <input
             type="number"
             id="device"
-            v-model="dataOrder.water"
+            v-model="dataOrder.quantity"
             class="w-full h-full outline-none text-2xl px-4 text-[#7895CB]"
           />
         </div>
@@ -43,14 +43,14 @@
         class="col-span-2 bg-[#7895CB] h-16 flex justify-center items-center"
       >
         <h1 class="text-white text-heading-4 font-heading-1">
-          {{ loggedInUser.regionId }}
+          {{ loggedInUser.deviceName }}
         </h1>
       </div>
       <div
         class="col-span-1 bg-[#7895CB] h-16 flex justify-center items-center"
       >
         <h1 class="text-white text-heading-4 font-heading-1">
-          {{ sumPrice }}
+          {{ totalPrice }}
         </h1>
       </div>
       <div
@@ -63,37 +63,77 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 import Button from "./Button.vue";
+
 export default {
   components: {
     Button,
   },
-  props: {
-    dataOrder: {
-      type: Object,
-    },
-    createOrder: {
-      type: Function,
-    },
-  },
+  props: {},
   data() {
-    return {};
+    return {
+      dataOrder: {
+        quantity: 0,
+        deviceId: "",
+        userId: "",
+      },
+    };
   },
   computed: {
+    ...mapMutations(["closeNotification"]),
     ...mapGetters(["loggedInUser"]),
-    sumPrice() {
-      return this.dataOrder.water * 5000;
+    totalPrice() {
+      return this.dataOrder.quantity * 5000;
     },
   },
   methods: {
+    ...mapMutations(["addNotification"]),
     onclick() {
       this.dataOrder = {
-        water: this.dataOrder.water,
-        regionId: this.loggedInUser.regionId,
-        price: this.sumPrice,
+        deviceId: this.loggedInUser.deviceId,
+        quantity: parseInt(this.dataOrder.quantity),
+        userId: this.loggedInUser.id,
+        totalPrice: this.totalPrice,
       };
-      this.$emit("order-created", this.dataOrder);
+      this.createOrder(this.dataOrder);
+    },
+
+    async createOrder(orderData) {
+      console.log(orderData);
+      try {
+        // Kirim permintaan ke server untuk membuat order baru
+        const response = await this.$axios.post("/order", {
+          quantity: orderData.quantity,
+          deviceId: orderData.deviceId,
+          userId: orderData.userId,
+        });
+
+        if (response.status === 201) {
+          const newOrder = {
+            index: 1,
+            deviceId: orderData.deviceId,
+            userId: orderData.userId,
+            quantity: orderData.quantity,
+            totalPrice: orderData.totalPrice,
+          };
+
+          this.$emit("order-created", newOrder);
+
+          this.addNotification({
+            message: "Pembelian berhasil. Jangan lupa order lagi ya!",
+            status: "success",
+          });
+        }
+      } catch (error) {
+        if (error) {
+          this.addNotification({
+            message:
+              error.response.data.message || "Gagal membuat orderan baru.",
+            status: "error",
+          });
+        }
+      }
     },
   },
 };

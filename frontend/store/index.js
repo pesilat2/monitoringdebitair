@@ -31,6 +31,11 @@ export const getters = {
   },
   routes(state) {
     let path = "";
+    let nameDashboard = {
+      ADMIN_UTAMA: "/dashboard-admin-utama",
+      ADMIN_DAERAH: "/dashboard-admin-daerah",
+      USER: "/dashboard-user",
+    };
     if (state.auth.user.role === "ADMIN_UTAMA") {
       path = "/dashboard-admin-utama";
     } else if (state.auth.user.role === "ADMIN_DAERAH") {
@@ -48,7 +53,13 @@ export const getters = {
         name: "pemakaian",
         path: "/pemakaian",
         icon: "ri-order-play-line",
-        type: "USER",
+        type: "ADMIN_UTAMA",
+      },
+      {
+        name: "pemakaian",
+        path: "/pemakaian",
+        icon: "ri-order-play-line",
+        type: "ADMIN_DAERAH",
       },
       {
         name: "profile",

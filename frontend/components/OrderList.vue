@@ -22,12 +22,11 @@
       </div>
     </div>
     <!-- item table -->
-    <ItemOrder v-for="item of listOrder" :key="item.id" :data="item" />
+    <ItemOrder v-for="item of listOrder" :key="item.index" :data="item" />
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
 import Button from "./Button.vue";
 import ItemOrder from "~/components/ItemOrder.vue";
 export default {
@@ -38,25 +37,15 @@ export default {
   props: {
     listOrder: Array,
   },
-  data() {
-    return {};
-  },
-  computed: {
-    ...mapGetters(["loggedInUser"]),
-    sumPrice() {
-      return this.dataOrder.water * 5000;
-    },
-  },
-
-  methods: {
-    onclick() {
-      this.dataOrder = {
-        water: this.dataOrder.water,
-        regionId: this.loggedInUser.regionId,
-        price: this.sumPrice,
-      };
-      console.log(this.dataOrder);
-    },
+  async fetch() {
+    try {
+      const res = await this.$axios.$get("/orders");
+      const data = res.data;
+      console.log(data);
+      this.listOrder = data;
+    } catch (error) {
+      console.log(error);
+    }
   },
 };
 </script>
