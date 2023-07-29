@@ -40,9 +40,6 @@ export default {
   computed: {
     ...mapGetters(["isAuthenticated", "loggedInUser"]),
   },
-  mounted() {
-    console.log(this.loggedInUser);
-  },
   methods: {
     showEditForm() {
       this.editProfile = true;

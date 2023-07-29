@@ -38,8 +38,8 @@
         v-if="variant === 'REGISTER'"
         label="Desa"
         :data="dataRegions"
-        id="desa"
         @closeNotification="onCloseNotification"
+        id="desa"
         v-model="form.regionId"
       />
       <div class="flex justify-end mt-6">
@@ -148,6 +148,9 @@ export default {
           });
         }
       }
+    },
+    onCloseNotification() {
+      this.closeNotification;
     },
     navigate(route) {
       this.$router.push(`/${route}`);

@@ -32,7 +32,11 @@
         </div>
         <div>
           <img
-            src="https://avatars.githubusercontent.com/640x640?technology"
+            :src="
+              loggedInUser.imageProfile
+                ? loggedInUser.imageProfile
+                : 'https://avatars.githubusercontent.com/640x640?technology'
+            "
             alt="avatar"
             class="rounded-full w-12"
           />

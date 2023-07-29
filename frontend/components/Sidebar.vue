@@ -7,7 +7,7 @@
       <div class="absolute top-0 right-0 lg:hidden" @click="toggleNavbar">
         <i class="ri-close-line text-heading-3 text-primary cursor-pointer"></i>
       </div>
-      <div class="flex justify-center items-center border-b-2 border-primary">
+      <div class="flex justify-center items-center">
         <h1 class="text-heading-1 font-heading-1 text-primary px-11 py-8">
           Dashboard
         </h1>

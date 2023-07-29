@@ -38,17 +38,6 @@ export default {
 </script>
 
 <style>
-<<<<<<< HEAD
-.progressAnimation {
-  animation: "progressAnimation 4s linear infinite";
-}
-@keyframes progressAnimation {
-  0% {
-    width: 0;
-  }
-  100% {
-    width: 100%;
-=======
 .spinner {
   animation: rotate 2s linear infinite;
   z-index: 2;
@@ -84,7 +73,6 @@ export default {
   100% {
     stroke-dasharray: 90, 150;
     stroke-dashoffset: -124;
->>>>>>> 8e002bd9750d2d74150ee2bf35803f0c5ee85acc
   }
 }
 </style>

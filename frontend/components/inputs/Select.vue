@@ -1,11 +1,14 @@
 <template>
   <div>
-    <label class="text-3xl font-normal text-[#7895CB]" :for="id"
+    <label class="text-2xl font-normal text-[#7895CB]" :for="id"
       >{{ label }}:</label
     >
     <div
-      class="border text-xl border-[#7895CB] rounded hover:shadow-lg shadow-[#7895CB] transition-colors"
+      class="flex items-center border mt-2 text-xl px-5 border-[#7895CB] rounded hover:shadow-lg shadow-[#7895CB] transition-colors"
     >
+      <div class="text-2xl text-[#7895CB]">
+        <i :class="icon"></i>
+      </div>
       <select
         :value="value"
         @change="$emit('input', $event.target.value)"
@@ -13,7 +16,7 @@
         class="w-full h-12 outline-none text-[#7895CB] px-5"
       >
         <option
-          class="text-xl border border-[#7895CB] font-normal text-[#7895CB] mb-2"
+          class="text-xl border border-[#7895CB] font-normal text-[#7895CB] mb-2 active:bg-[#7895CB] hover:bg-[#7895CB]"
           v-for="item in data"
           :key="item.id"
           :value="item.value"
@@ -32,6 +35,7 @@ export default {
     data: Array,
     id: String,
     value: String,
+    icon: String,
   },
 };
 </script>
