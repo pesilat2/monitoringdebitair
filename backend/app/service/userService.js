@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const { nanoid } = require('nanoid');
-const { User } = require('../models');
+const { User, Region } = require('../models');
 const InvariantError = require('../exeptions/InvariantError');
 const NotFoundError = require('../exeptions/NotFoundError');
 const AuthorizationError = require('../exeptions/AuthorizationError');
@@ -43,6 +43,12 @@ const findAllUser = async (userRole, regionId) => {
       attributes: {
         exclude: ['password'],
       },
+      include: [
+        {
+          model: Region,
+          attributes: ['name'],
+        },
+      ],
     });
   } if (userRole === 'ADMIN_DAERAH') {
     const usersInRegion = await User.findAll({
@@ -52,6 +58,12 @@ const findAllUser = async (userRole, regionId) => {
       attributes: {
         exclude: ['password'],
       },
+      include: [
+        {
+          model: Region,
+          attributes: ['name'],
+        },
+      ],
     });
     return usersInRegion;
   }
@@ -67,6 +79,12 @@ const findUserById = async (userRole, userId, regionId) => {
       attributes: {
         exclude: ['password'],
       },
+      include: [
+        {
+          model: Region,
+          attributes: ['name'],
+        },
+      ],
     });
     if (!user) {
       throw new NotFoundError(`User dengan id '${userId}' tidak ditemukan`);
@@ -82,6 +100,12 @@ const findUserById = async (userRole, userId, regionId) => {
       attributes: {
         exclude: ['password'],
       },
+      include: [
+        {
+          model: Region,
+          attributes: ['name'],
+        },
+      ],
     });
     if (!user) {
       throw new NotFoundError(`User dengan id '${userId}' tidak ditemukan`);
