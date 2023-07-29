@@ -37,6 +37,7 @@ const createOrderHandler = asyncHandler(async (req, res) => {
       orderId,
       userId,
       deviceId,
+      deviceName: device.name,
       quantity,
       totalPrice,
     },

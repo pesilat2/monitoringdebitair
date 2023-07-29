@@ -32,6 +32,12 @@ const findAllOrder = async (userRole, regionId) => {
 
     const orders = await Order.findAll({
       where: { deviceId: device.id },
+      include: [
+        {
+          model: Device,
+          attributes: ['name', 'max', 'price'],
+        },
+      ],
     });
     if (!orders) {
       throw NotFoundError('transaksi tidak ditemukan');
@@ -44,7 +50,15 @@ const findAllOrder = async (userRole, regionId) => {
 };
 
 const findOrderById = async (orderId) => {
-  const order = await Order.findOne({ where: { id: orderId } });
+  const order = await Order.findOne({
+    where: { id: orderId },
+    include: [
+      {
+        model: Device,
+        attributes: ['name', 'max', 'price'],
+      },
+    ],
+  });
   if (!order) {
     throw new NotFoundError('transaksi tidak ditemukan');
   }
@@ -52,7 +66,15 @@ const findOrderById = async (orderId) => {
 };
 
 const findOrderByUserId = async (userId) => {
-  const order = await Order.findOne({ where: { userId } });
+  const order = await Order.findOne({
+    where: { userId },
+    include: [
+      {
+        model: Device,
+        attributes: ['name', 'max', 'price'],
+      },
+    ],
+  });
   if (!order) {
     throw new NotFoundError('transaksi tidak ditemukan');
   }
