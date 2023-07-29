@@ -83,7 +83,8 @@ const getAllReportByDevice = asyncHandler(async (req, res) => {
 });
 
 const getReportDeviceDay = asyncHandler(async (req, res) => {
-  const deviceId = parseInt(req.params.deviceId, 10);
+  // eslint-disable-next-line radix
+  const deviceId = parseInt(req.params.deviceId);
   const { date } = req.params;
 
   const reports = await getOrdersByDeviceAndDay(deviceId, date);
@@ -94,7 +95,8 @@ const getReportDeviceDay = asyncHandler(async (req, res) => {
 });
 
 const getReportDeviceWeek = asyncHandler(async (req, res) => {
-  const deviceId = parseInt(req.params.deviceId, 10);
+  // eslint-disable-next-line radix
+  const deviceId = parseInt(req.params.deviceId);
   const { date } = req.params;
 
   const reports = await getOrdersByDeviceAndWeek(deviceId, date);

@@ -24,6 +24,6 @@ router.get('/report/month/:deviceId/:date', getReportDeviceMonth);
 // router.get('/report/devices', getReportByDate);
 router.put('/reports/:id', authCheck, adminCheck, updateReportByIdHandler);
 router.delete('/reports/:id', authCheck, adminCheck, deleteReportByIdHandler);
-router.post('/reports', authCheck, adminCheck, createReportHandler);
+router.post('/report', authCheck, adminCheck, createReportHandler);
 
 module.exports = router;

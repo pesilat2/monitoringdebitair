@@ -1,6 +1,6 @@
 const { nanoid } = require('nanoid');
 const { Op } = require('sequelize');
-const { Report } = require('../models');
+const { Report, Device } = require('../models');
 const InvariantError = require('../exeptions/InvariantError');
 const NotFoundError = require('../exeptions/NotFoundError');
 
