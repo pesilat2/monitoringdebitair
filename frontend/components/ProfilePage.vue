@@ -23,7 +23,7 @@
               <button @click="cancelUpload">
                 <i class="ri-close-line"></i>
               </button>
-              <button><i class="ri-check-line"></i></button>
+              <button @click="upload"><i class="ri-check-line"></i></button>
             </div>
             <input
               @change="previewFile"
@@ -36,16 +36,12 @@
 
           <img
             class="rounded-full mx-auto h-full w-full object-cover"
-            :src="
-              previewUrl
-                ? previewUrl
-                : 'https://th.bing.com/th/id/OIP.w6Cs6qz234c71XloeqKdwgHaHa?w=174&h=180&c=7&r=0&o=5&pid=1.7'
-            "
+            :src="previewUrl ? previewUrl : loggedInUser.imageProfile"
             alt="profile"
           />
         </div>
         <h1
-          class="font-heading-1 text-heading-1 text-primary_dark mt-9 text-center"
+          class="font-heading-2 text-heading-2 md:font-heading-1 md:text-heading-1 text-primary_dark mt-9 text-center"
         >
           {{ loggedInUser.fullname }}
         </h1>
@@ -66,9 +62,12 @@
       </div>
 
       <div class="w-full">
-        <ItemProfile label="Alamat" :fill="loggedInUser.address" />
+        <ItemProfile label="Alamat" :fill="loggedInUser.address || ''" />
         <ItemProfile label="Umur" :fill="loggedInUser.age" />
-        <ItemProfile label="jenis Kelamin" :fill="loggedInUser.gender" />
+        <ItemProfile
+          label="jenis Kelamin"
+          :fill="loggedInUser.gender === 'MALE' ? 'Laki-Laki' : 'Perempuan'"
+        />
         <ItemProfile
           label="Status Pernikahan"
           :fill="loggedInUser.maritalStatus"
@@ -131,14 +130,18 @@ export default {
     },
     async upload() {
       try {
-        await this.$axios.post("signup", {
-          image: this.base64Url,
+        await this.$axios.put("update/me", {
+          imageProfile: this.previewUrl,
         });
+        this.base64Url = null;
+        this.previewUrl = "";
         this.addNotification({
           status: "success",
           message: "Photo profil berhasil di ubah",
         });
       } catch (error) {
+        this.base64Url = null;
+        this.previewUrl = "";
         this.addNotification({
           status: "error",
           message: error.response.data.message,

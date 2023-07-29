@@ -1,17 +1,19 @@
 <template>
-  <div class="bg-gradient-to-r from-primary_dark to-primary h-full">
-    <Notification :duration="5000" />
-    <nuxt-child />
-  </div>
+  <parent-layout>
+    <div class="bg-gradient-to-r from-primary_dark to-primary h-full">
+      <nuxt-child />
+    </div>
+  </parent-layout>
 </template>
 
 <script>
-import Notification from "~/components/Notification.vue";
+import ParentLayout from "./parentLayout.vue";
 
 export default {
   name: "Default",
   components: {
     Notification,
+    ParentLayout,
   },
 };
 </script>

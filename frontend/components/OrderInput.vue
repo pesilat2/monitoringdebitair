@@ -86,9 +86,6 @@ export default {
       return this.dataOrder.water * 5000;
     },
   },
-  mounted() {
-    console.log(this.loggedInUser);
-  },
   methods: {
     onclick() {
       this.dataOrder = {

@@ -33,26 +33,26 @@
         <Input
           label="Umur"
           id="umur"
-          type="number"
+          type="date"
           v-model="editForm.age"
           icon="ri-chat-heart-line"
         />
-        <Input
+        <Select
           label="Jenis Kelamin"
           id="janisKelamamin"
-          type="text"
+          :data="selectGender"
           v-model="editForm.gender"
           icon="ri-genderless-line"
         />
-        <Input
+        <Select
           label="Status Pernikahan"
           id="status pernikahan"
-          type="text"
+          :data="selectIsMarried"
           v-model="editForm.maritalStatus"
           icon="ri-user-heart-line"
         />
       </form>
-      <div class="w-full flex justify-end">
+      <div class="w-full flex justify-end mt-4">
         <div>
           <Button
             label="Kembali"
@@ -76,11 +76,13 @@
 <script>
 import Input from "~/components/inputs/Input.vue";
 import Button from "~/components/Button.vue";
-import { mapGetters } from "vuex";
+import Select from "~/components/inputs/Select.vue";
+import { mapGetters, mapMutations } from "vuex";
 export default {
   components: {
     Input,
     Button,
+    Select,
   },
   props: {
     isEdit: Boolean,
@@ -90,39 +92,42 @@ export default {
       editForm: {
         fullname: "",
         email: "",
-        image: "",
         address: "",
         age: "",
         gender: "",
-        maritalStatus: "",
+        isMarried: "",
       },
+      selectIsMarried: [
+        { id: "menikah", name: "Menikah", value: true },
+        { id: "belum-menikah", name: "Belum Menikah", value: false },
+      ],
+      selectGender: [
+        { id: "laki-laki", name: "Laki-laki", value: "MALE" },
+        { id: "perempuan", name: "Perempuan", value: "FEMALE" },
+      ],
     };
   },
   computed: {
     ...mapGetters(["loggedInUser"]),
   },
   methods: {
+    ...mapMutations(["addNotification"]),
     closeEditForm() {
       this.$emit("closeEditForm");
     },
     async submitEditProfile() {
-      await this.$axios.put(
-        "/update/user/" + this.loggedInUser.id,
-        this.editForm
-      );
+      await this.$axios.put("/update/me", this.editForm);
     },
   },
   mounted() {
     this.editForm = {
       fullname: this.loggedInUser.fullname,
       email: this.loggedInUser.email,
-      image: this.loggedInUser.image,
       address: this.loggedInUser.address,
       age: this.loggedInUser.age,
       gender: this.loggedInUser.gender,
       isMarried: this.loggedInUser.isMarried,
     };
-    console.log(this.editForm);
   },
 };
 </script>

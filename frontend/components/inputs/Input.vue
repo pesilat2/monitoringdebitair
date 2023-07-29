@@ -1,13 +1,10 @@
 <template>
   <div class="mb-4">
-    <label
-      v-if="label"
-      class="text-2xl font-normal text-[#7895CB] mb-2"
-      :for="id"
+    <label v-if="label" class="text-2xl font-normal text-[#7895CBs]" :for="id"
       >{{ label }}:</label
     >
     <div
-      class="flex gap-5 h-12 items-center w-full border border-[#7895CB] rounded px-5 hover:shadow-lg shadow-[#7895CB] transition-colors"
+      class="flex gap-5 h-12 items-center w-full mt-1 border border-[#7895CB] rounded px-5 hover:shadow-lg shadow-[#7895CB] transition-colors"
     >
       <div class="text-2xl text-[#7895CB]">
         <i :class="icon"></i>

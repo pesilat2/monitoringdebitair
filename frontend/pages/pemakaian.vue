@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="w-full">
     <Header iconClasses="ri-order-play-line" title="pemakaian" />
     <div class="p-6 w-full">
       <OrderInput :dataOrder="dataOrder" @order-created="createOrder" />

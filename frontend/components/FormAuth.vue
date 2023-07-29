@@ -35,6 +35,7 @@
         v-if="variant === 'REGISTER'"
         label="Desa"
         :data="dataRegions"
+        @closeNotification="onCloseNotification"
         id="desa"
         v-model="form.regionId"
       />
@@ -144,6 +145,9 @@ export default {
           });
         }
       }
+    },
+    onCloseNotification() {
+      this.closeNotification;
     },
     navigate(route) {
       this.$router.push(`/${route}`);

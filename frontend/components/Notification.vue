@@ -19,20 +19,11 @@
           >
             {{ notification.message }}
           </h1>
-          <div @click="deleteMessage" class="cursor-pointer">
+          <div @click="deleteMessage()" class="cursor-pointer">
             <i class="ri-close-line"></i>
           </div>
         </div>
       </div>
-      <div
-        v-if="time < 100"
-        :class="`absolute bottom-0 h-2 transition-all ${
-          notification.status === 'error' && 'bg-red-300'
-        } ${notification.status === 'success' && 'bg-green-300'} ${
-          notification.status === 'warning' && 'bg-yellow-300'
-        }`"
-        :style="{ width: `${time}%` }"
-      ></div>
     </div>
   </div>
 </template>
@@ -46,15 +37,11 @@ export default {
     duration: Number,
   },
   data() {
-    return {
-      time: 0,
-      close: false,
-    };
+    return {};
   },
   methods: {
     deleteMessage() {
       this.closeNotification;
-      this.close = true;
     },
   },
   computed: {
@@ -63,30 +50,15 @@ export default {
   },
   watch: {
     "notification.message": {
-      handler(newMessage, oldMessage) {
+      handler(newMessage) {
         if (newMessage) {
-          const timeNow = Date.now();
-          const intervalId = setInterval(() => {
-            const timerun = Date.now();
-            const timeDiff = timerun - timeNow;
-            this.time = Math.round((timeDiff / this.duration) * 100);
-            if (this.close) {
-              clearInterval(intervalId);
-              this.close = false;
-              this.time = 0;
-            }
-            if (this.time > 99) {
-              this.deleteMessage();
-              this.time = 0;
-              clearInterval(intervalId);
-            }
-          });
+          setTimeout(() => {
+            this.closeNotification;
+          }, this.duration);
         }
       },
-      immediate: true,
     },
   },
-  mounted() {},
 };
 </script>
 
