@@ -1,7 +1,7 @@
 <template>
-  <div class="bg-white px-5 py-4 rounded-xl shadow-xl w-full mt-6">
-    <h1 class="text-heading-4 text-black font-heading-1 mb-4">
-      Statistik Bulanan
+  <div :class="`col-span-${grid} bg-white p-4 rounded-xl shadow-xl w-full`">
+    <h1 class="text-heading-4 text-black font-heading-1">
+      {{ label }}
     </h1>
     <div class="chart-div">
       <LineChart :chartData="chartData" :options="chartOptions" />
@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import LineChart from "./chart/LineChart.vue";
+import LineChart from "./LineChart.vue";
 
 export default {
   components: { LineChart },
@@ -23,6 +23,8 @@ export default {
       type: Object,
       required: true,
     },
+    label: String,
+    grid: Number,
   },
 };
 </script>

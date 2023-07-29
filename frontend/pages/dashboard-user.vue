@@ -1,5 +1,7 @@
 <template>
-  <h1>Dashboard admin user</h1>
+  <div>
+    <h1>Dashboard admin user</h1>
+  </div>
 </template>
 
 <script>

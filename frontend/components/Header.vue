@@ -30,7 +30,9 @@
             {{ loggedInUser.fullname }}
           </h1>
         </div>
-        <div>
+        <div
+          class="border-2 border-[#7895CB] rounded-full w-12 h-12 overflow-hidden flex justify-center items-center"
+        >
           <img
             :src="
               loggedInUser.imageProfile
@@ -38,7 +40,7 @@
                 : 'https://avatars.githubusercontent.com/640x640?technology'
             "
             alt="avatar"
-            class="rounded-full w-12"
+            class="rounded-full w-12 object-cover h-12"
           />
         </div>
       </nuxt-link>

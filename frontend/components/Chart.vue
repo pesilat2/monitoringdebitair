@@ -1,24 +1,36 @@
 <template>
   <div>
-    <div class="flex flex-wrap gap-6 w-full">
-      <StatistikHarian :chartData="chartData" :chartOptions="chartOptions" />
+    <div class="grid grid-cols-3 gap-4 w-full">
+      <!-- <StatistikHarian :chartData="chartData" :chartOptions="chartOptions" />
       <StatistikMingguan :chartData="chartData" :chartOptions="chartOptions" />
+      <StatistikBulanan :chartData="chartData" :chartOptions="chartOptions" /> -->
+      <Statistik
+        :chartData="chartData"
+        :chartOptions="chartOptions"
+        label="Statistik Harian"
+        :grid="1"
+      />
+      <Statistik
+        :chartData="chartData"
+        :chartOptions="chartOptions"
+        label="Statistik Mingguan"
+        :grid="2"
+      />
+      <Statistik
+        :chartData="chartData"
+        :chartOptions="chartOptions"
+        label="Statistik Bulanan"
+        :grid="3"
+      />
     </div>
-    <StatistikBulanan :chartData="chartData" :chartOptions="chartOptions" />
   </div>
 </template>
 
 <script>
-import LineChart from "./statistik/chart/LineChart.vue";
-import StatistikBulanan from "./statistik/StatistikBulanan.vue";
-import StatistikHarian from "./statistik/StatistikHarian.vue";
-import StatistikMingguan from "./statistik/StatistikMingguan.vue";
+import Statistik from "./statistik/Statistik.vue";
 export default {
   components: {
-    LineChart,
-    StatistikBulanan,
-    StatistikMingguan,
-    StatistikHarian,
+    Statistik,
   },
   data() {
     return {

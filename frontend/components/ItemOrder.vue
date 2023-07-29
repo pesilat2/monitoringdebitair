@@ -1,7 +1,9 @@
 <template>
   <div class="w-full grid grid-cols-5 mt-4">
     <div class="col-span-2 bg-[#7895CB] h-16 flex justify-center items-center">
-      <h1 class="text-white text-heading-4 font-heading-1">{{ data.water }}</h1>
+      <h1 class="text-white text-heading-4 font-heading-1">
+        {{ data.water }} Liter
+      </h1>
     </div>
     <div class="col-span-2 bg-[#7895CB] h-16 flex justify-center items-center">
       <h1 class="text-white text-heading-4 font-heading-1">

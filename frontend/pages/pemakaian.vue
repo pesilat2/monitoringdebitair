@@ -1,7 +1,7 @@
 <template>
   <div class="w-full">
     <Header iconClasses="ri-order-play-line" title="pemakaian" />
-    <div class="p-6 w-full">
+    <div class="p-4 w-full">
       <OrderInput />
       <OrderList />
     </div>

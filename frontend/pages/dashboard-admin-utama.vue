@@ -1,17 +1,17 @@
 <template>
   <div class="w-full">
     <Header :title="headerTitle" :iconClasses="headerClass" />
-    <div class="pt-5 px-6">
-      <h1 class="text-heading-4 text-black font-heading-1 mb-6">
+    <div class="p-4">
+      <h1 class="text-heading-4 text-black font-heading-1 mb-4">
         Laporan Debit Air Keluar Semua Daerah
       </h1>
       <div>
         <Chart />
       </div>
-      <div class="mt-6">
+      <div class="mt-4">
         <CardStatistik />
       </div>
-      <div class="mt-6">
+      <div class="mt-4">
         <CardItemLaporan
           :title="titleCard"
           :placeholder="placeholderCard"

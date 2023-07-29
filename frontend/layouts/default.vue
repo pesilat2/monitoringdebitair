@@ -3,7 +3,9 @@
     <div>
       <div class="bg-[#D8E5F1] flex">
         <Sidebar />
-        <nuxt-child />
+        <div class="lg:pl-[300px] w-full h-[100vh] overflow-y-auto">
+          <nuxt-child />
+        </div>
       </div>
     </div>
   </parent-layout>

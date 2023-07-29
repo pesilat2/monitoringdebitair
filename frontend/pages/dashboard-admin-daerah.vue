@@ -1,5 +1,7 @@
 <template>
-  <h1>Dashboard admin daerah</h1>
+  <div class="">
+    <h1>Dashboard admin daerah</h1>
+  </div>
 </template>
 
 <script>

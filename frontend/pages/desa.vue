@@ -1,8 +1,8 @@
 <template>
   <div class="w-full">
     <Header :title="headerTitle" :iconClasses="headerClass" />
-    <div class="pt-5 px-6">
-      <div class="mt-6">
+    <div class="p-4">
+      <div>
         <CardItemLaporan
           :title="titleCard"
           :placeholder="placeholderCard"

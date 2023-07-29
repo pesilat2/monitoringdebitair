@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="`col-span-3 bg-white h-full pt-14 ${
+    :class="`col-span-3 bg-white h-full pt-14 rounded-xl ${
       isEdit ? 'lg:col-span-1' : ''
     } `"
   >
@@ -41,7 +41,7 @@
           />
         </div>
         <h1
-          class="font-heading-2 text-heading-2 md:font-heading-1 md:text-heading-1 text-primary_dark mt-9 text-center"
+          class="font-heading-2 text-heading-2 md:font-heading-1 md:text-heading-1 text-primary_dark mt-9 text-center overflow-hidden"
         >
           {{ loggedInUser.fullname }}
         </h1>
@@ -70,7 +70,7 @@
         />
         <ItemProfile
           label="Status Pernikahan"
-          :fill="loggedInUser.maritalStatus"
+          :fill="loggedInUser.isMarried ? 'Sudah Menikah' : 'Belum Menikah'"
         />
       </div>
     </div>
@@ -82,6 +82,9 @@ import { mapGetters, mapMutations } from "vuex";
 export default {
   props: {
     isEdit: Boolean,
+  },
+  mounted() {
+    console.log(this.loggedInUser);
   },
   data() {
     return {

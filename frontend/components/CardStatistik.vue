@@ -1,5 +1,5 @@
 <template>
-  <section class="flex flex-wrap gap-6">
+  <section class="grid grid-cols-3 gap-4">
     <CardItemStatistik />
     <CardItemStatistik />
     <CardItemStatistik />

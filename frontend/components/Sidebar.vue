@@ -1,10 +1,10 @@
 <template>
   <section>
     <div
-      class="hidden -left-full top-0 lg:opacity-100 lg:left-0 lg:block min-h-screen h-full w-[300px] bg-white shadow-2xl z-20 relative"
+      class="fixed hidden -left-full top-0 lg:opacity-100 lg:left-0 lg:block min-h-screen h-full w-[300px] bg-white shadow-custom z-20"
       :class="{ active: showNavbar, closing: isClosing }"
     >
-      <div class="absolute top-0 right-0 lg:hidden" @click="toggleNavbar">
+      <div class="absolute top-4 right-4 lg:hidden" @click="toggleNavbar">
         <i class="ri-close-line text-heading-3 text-primary cursor-pointer"></i>
       </div>
       <div class="flex justify-center items-center">
@@ -12,7 +12,7 @@
           Dashboard
         </h1>
       </div>
-      <div class="pt-10 px-6 flex flex-col gap-6">
+      <div class="pt-4 px-6 flex flex-col gap-6">
         <ButtonSidebar
           v-for="link of filteredLinks"
           :key="link.nama"
