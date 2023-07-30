@@ -2,15 +2,15 @@ const asyncHandler = require('express-async-handler');
 const { signIn } = require('../service/authService');
 const { createAccessToken } = require('../tokenize/TokenManager');
 const { createUser } = require('../service/userService');
+const { Region } = require('../models');
 
-const userSignUp = asyncHandler(async (req, res) => {
-  const { id, regionId, name, } = await createUser(req.body);
+const userSignUp = asyncHandler(async (req, res) => { 
+  const { id, regionId, } = await createUser(req.body);
   res.status(201).json({
     status: 'success',
     data: {
       id,
       regionId,
-      name,
     },
   });
 });
