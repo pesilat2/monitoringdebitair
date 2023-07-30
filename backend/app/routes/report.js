@@ -1,13 +1,12 @@
-/* eslint-disable no-return-await */
 const express = require('express');
 const {
   createReportHandler,
   getAllReportHandler,
   getReportByIdHandler,
   updateReportByIdHandler,
+  reportFeedbackHandler,
   getAllReportByDevice,
   deleteReportByIdHandler,
-  reportFeedbackHandler,
 } = require('../controller/report');
 const { authCheck, adminCheck } = require('../middleware/authCheck');
 

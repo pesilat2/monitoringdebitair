@@ -1,18 +1,8 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-shadow */
-/* eslint-disable no-return-await */
-/* eslint-disable no-plusplus */
-/* eslint-disable no-await-in-loop */
-/* eslint-disable no-mixed-operators */
 const asyncHandler = require('express-async-handler');
 const { Op } = require('sequelize');
-<<<<<<< HEAD
-const { Report, Device, Order, User } = require('../models');
-=======
 const {
   Report, Device, Order, User,
 } = require('../models');
->>>>>>> e88035e (push fixing bugs in order, user)
 const {
   existingReport,
   createReport,
