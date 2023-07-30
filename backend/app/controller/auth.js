@@ -5,7 +5,6 @@ const { createUser } = require('../service/userService');
 
 const userSignUp = asyncHandler(async (req, res) => {
   const { id, regionId, name, } = await createUser(req.body);
-
   res.status(201).json({
     status: 'success',
     data: {
