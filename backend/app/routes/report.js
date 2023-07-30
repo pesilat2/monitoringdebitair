@@ -1,3 +1,4 @@
+/* eslint-disable no-return-await */
 const express = require('express');
 const {
   createReportHandler,
@@ -10,11 +11,13 @@ const {
   getReportDeviceWeek,
   getReportDeviceMonth,
   deleteReportByIdHandler,
+  reportFeedbackHandler,
 } = require('../controller/report');
 const { authCheck, adminCheck } = require('../middleware/authCheck');
 
 const router = express.Router();
 
+router.get('/report-feedback', reportFeedbackHandler);
 router.get('/reports', getAllReportHandler);
 router.get('/reports/:id', getReportByIdHandler);
 router.get('/report/devices', getAllReportByDevice);
