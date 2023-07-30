@@ -17,7 +17,7 @@ const { authCheck, adminCheck } = require('../middleware/authCheck');
 
 const router = express.Router();
 
-router.get('/report-feedback', reportFeedbackHandler);
+router.get('/report-feedback', authCheck, reportFeedbackHandler);
 router.get('/reports', getAllReportHandler);
 router.get('/reports/:id', getReportByIdHandler);
 router.get('/report/devices', getAllReportByDevice);

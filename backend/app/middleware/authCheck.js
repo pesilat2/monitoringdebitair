@@ -6,7 +6,7 @@ const { verifyAccessToken, decodePayload } = require('../tokenize/TokenManager')
 const { User } = require('../models');
 
 exports.authCheck = asynchandler(async (req, res, next) => {
-  const token = req.headers.authorization;
+  const token = req.headers.authorization.split(' ')[1];
   if (!token) {
     throw new AuthenticationError('Akses token diperlukan');
   }

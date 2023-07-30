@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-shadow */
 /* eslint-disable no-return-await */
 /* eslint-disable no-plusplus */
@@ -5,7 +6,7 @@
 /* eslint-disable no-mixed-operators */
 const asyncHandler = require('express-async-handler');
 const { Op } = require('sequelize');
-const { Report, Device, Order } = require('../models');
+const { Report, Device, Order, User } = require('../models');
 const {
   existingReport,
   createReport,
@@ -162,8 +163,18 @@ const reportFeedbackHandler = asyncHandler(async (req, res) => {
 
   // calculate usage water
   const calculateOrderStatistics = (order) => {
-    const totalPrice = order.reduce((acc, order) => acc + order.totalPrice, 0);
-    const numberOfOrders = order.length;
+    let orders = order;
+
+    if (req.user.role === 'ADMIN_DAERAH') {
+      orders = order.filter((item) => item.User.regionId === req.user.regionId);
+    }
+
+    if (req.user.role === 'USER') {
+      orders = order.filter((item) => item.User.id === req.user.id);
+    }
+
+    const totalPrice = orders.reduce((acc, order) => acc + order.totalPrice, 0);
+    const numberOfOrders = orders.length;
     return {
       totalPrice, numberOfOrders,
     };
@@ -177,6 +188,10 @@ const reportFeedbackHandler = asyncHandler(async (req, res) => {
           [Op.gte]: startDate,
           [Op.lte]: endDate,
         },
+      },
+      include: {
+        model: User,
+        attributes: ['regionId', 'id'],
       },
     });
 
