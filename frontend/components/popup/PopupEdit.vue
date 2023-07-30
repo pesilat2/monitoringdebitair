@@ -132,13 +132,11 @@ export default {
   async fetch() {
     try {
       const response = await this.$axios.$get("/regions");
-      console.log(response);
       const regions = response.data.regions.map((region) => ({
         id: region.id,
         name: region.name,
         value: region.id,
       }));
-      console.log(regions);
       this.dataRegions = regions;
     } catch (error) {
       this.error = error;

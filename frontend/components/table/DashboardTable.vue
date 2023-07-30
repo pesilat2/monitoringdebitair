@@ -314,9 +314,6 @@ export default {
       return this.totalPages >= 1;
     },
   },
-  mounted() {
-    console.log(this.levelAccess);
-  },
   methods: {
     ...mapMutations(["addNotification"]),
     // redirectToDetail(id) {
@@ -639,8 +636,6 @@ export default {
         // });
 
         const response = await fetch(`/regions/${id}`, requestOptions);
-
-        console.log(response);
 
         // Jika permintaan berhasil dan server memberikan respons status 200 (OK)
         if (response.status === 200) {

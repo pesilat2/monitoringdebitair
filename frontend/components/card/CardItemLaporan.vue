@@ -164,9 +164,6 @@ export default {
       createUserDataRegion: "createUserDaerah",
     };
   },
-  mounted() {
-    console.log("carditem", this.userDataRegionComputed);
-  },
   watch: {
     // Pantau perubahan pada properti dashboardType
     dashboardType: {
