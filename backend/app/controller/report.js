@@ -173,10 +173,10 @@ const reportFeedbackHandler = asyncHandler(async (req, res) => {
       orders = order.filter((item) => item.User.id === req.user.id);
     }
 
-    const totalPrice = orders.reduce((acc, order) => acc + order.totalPrice, 0);
+    const quantity = orders.reduce((acc, order) => acc + order.quantity, 0);
     const numberOfOrders = orders.length;
     return {
-      totalPrice, numberOfOrders,
+      quantity, numberOfOrders,
     };
   };
 
