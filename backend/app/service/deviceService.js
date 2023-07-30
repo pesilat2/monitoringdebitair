@@ -1,5 +1,5 @@
 const { nanoid } = require('nanoid');
-const { Device } = require('../models');
+const { Device, Region } = require('../models');
 const InvariantError = require('../exeptions/InvariantError');
 const NotFoundError = require('../exeptions/NotFoundError');
 
@@ -28,7 +28,12 @@ const existingDevice = async (regionId) => {
 };
 
 const findAllDevice = async () => {
-  const devices = await Device.findAll();
+  const devices = await Device.findAll({
+    include: {
+      model: Region,
+      attributes: ['name'],
+    }
+  });
 
   return devices;
 };
