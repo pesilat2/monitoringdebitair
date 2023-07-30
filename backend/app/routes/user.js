@@ -8,12 +8,12 @@ const {
   updateUserProfileHandler,
 } = require('../controller/user');
 
-router.get('/findAll/users', authCheck, adminCheck, findAll);
-router.get('/find/user/:id', authCheck, adminCheck, findById);
-router.get('/find/email/:email', authCheck, adminCheck, findByEmail);
+router.get('/users', authCheck, adminCheck, findAll);
+router.get('/users/:id', authCheck, adminCheck, findById);
+router.get('/users/:email', authCheck, adminCheck, findByEmail);
 router.get('/me', authCheck, getUserProfile);
-router.put('/update/me', authCheck, updateUserProfileHandler);
-router.put('/update/user/:id', authCheck, adminCheck, updateUserHandler);
-router.delete('/delete/user/:id', authCheck, adminCheck, deleteUser);
+router.put('/me', authCheck, updateUserProfileHandler);
+router.put('/users/:id', authCheck, adminCheck, updateUserHandler);
+router.delete('/users/:id', authCheck, adminCheck, deleteUser);
 
 module.exports = router;

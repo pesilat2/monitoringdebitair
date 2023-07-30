@@ -1,6 +1,5 @@
 const { nanoid } = require('nanoid');
-const { Op } = require('sequelize');
-const { Report, Device } = require('../models');
+const { Report } = require('../models');
 const InvariantError = require('../exeptions/InvariantError');
 const NotFoundError = require('../exeptions/NotFoundError');
 
@@ -64,60 +63,6 @@ const findReportById = async (reportId) => {
   return report;
 };
 
-// Controller function to get orders by device ID and created date in day
-async function getOrdersByDeviceAndDay(deviceId, date) {
-  const startDate = new Date(date);
-  const endDate = new Date(date);
-  endDate.setDate(endDate.getDate() + 1);
-
-  const reports = await Report.findAll({
-    where: {
-      deviceId,
-      createdAt: {
-        [Op.between]: [startDate, endDate],
-      },
-    },
-  });
-
-  return reports;
-}
-
-// Controller function to get orders by device ID and created date in week
-async function getOrdersByDeviceAndWeek(deviceId, date) {
-  const startDate = new Date(date);
-  const endDate = new Date(date);
-  endDate.setDate(endDate.getDate() + 7);
-
-  const reports = await Report.findAll({
-    where: {
-      deviceId,
-      createdAt: {
-        [Op.between]: [startDate, endDate],
-      },
-    },
-  });
-
-  return reports;
-}
-
-// Controller function to get orders by device ID and created date in month
-async function getOrdersByDeviceAndMonth(deviceId, date) {
-  const startDate = new Date(date);
-  const endDate = new Date(date);
-  endDate.setMonth(endDate.getMonth() + 1);
-
-  const reports = await Report.findAll({
-    where: {
-      deviceId,
-      createdAt: {
-        [Op.between]: [startDate, endDate],
-      },
-    },
-  });
-
-  return reports;
-}
-
 const deleteReportById = async (reportId) => {
   await Report.destroy({ where: { id: reportId } });
 };
@@ -127,9 +72,6 @@ module.exports = {
   findAllReport,
   findReportById,
   updateReportById,
-  getOrdersByDeviceAndDay,
-  getOrdersByDeviceAndWeek,
-  getOrdersByDeviceAndMonth,
   deleteReportById,
   availabilityReport,
   existingReport,
