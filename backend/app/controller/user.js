@@ -3,7 +3,7 @@ const asyncHandler = require('express-async-handler');
 const NotFoundError = require('../exeptions/NotFoundError');
 const AuthorizationError = require('../exeptions/AuthorizationError');
 const {
-  findAllUser, findUserById, findUserByEmail, updateUser, deleteUserById, updateUserProfile,
+  findAllUser, findUserById, findUserByEmail, updateUser, deleteUserById, updateUserProfile, currentUser,
 } = require('../service/userService');
 
 exports.findAll = asyncHandler(async (req, res) => {
@@ -77,7 +77,7 @@ exports.updateUserHandler = asyncHandler(async (req, res) => {
 });
 
 exports.getUserProfile = asyncHandler(async (req, res) => {
-  const { user } = req;
+  const user = await currentUser(req.user);
 
   res.status(200).json({
     status: 'success',

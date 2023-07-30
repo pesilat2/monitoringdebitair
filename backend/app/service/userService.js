@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const { nanoid } = require('nanoid');
-const { User, Region } = require('../models');
+const { User, Region, Device } = require('../models');
 const InvariantError = require('../exeptions/InvariantError');
 const NotFoundError = require('../exeptions/NotFoundError');
 const AuthorizationError = require('../exeptions/AuthorizationError');
@@ -144,6 +144,25 @@ const updateUser = async (user, userRole, userId, regionId) => {
   throw new AuthorizationError('Anda tidak berhak mengakses resource ini');
 };
 
+const currentUser = async ({ id }) => {
+  const user = await User.findOne({
+    where: {
+      id,
+    },
+    include: [
+      {
+        model: Region,
+      },
+    ],
+  });
+
+  const device = await Device.findOne({ where: { regionId: user.regionId } });
+
+  return {
+    ...user.dataValues, device: { ...device.dataValues },
+  };
+};
+
 const updateUserProfile = async (userId, userData) => {
   const existingUser = await User.findByPk(userId);
   console.log('sebelum di update', existingUser.toJSON());
@@ -166,7 +185,6 @@ const updateUserProfile = async (userId, userData) => {
     existingUser.gender = userData.gender;
   }
   await existingUser.save();
-  console.log('setelah di update', existingUser.toJSON());
   return existingUser;
 };
 
@@ -203,4 +221,5 @@ module.exports = {
   updateUserProfile,
   updateUser,
   deleteUserById,
+  currentUser,
 };
