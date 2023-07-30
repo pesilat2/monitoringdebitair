@@ -10,7 +10,7 @@ const ClientError = require('../exeptions/ClientError');
 const createOrderHandler = asyncHandler(async (req, res) => {
   const { userId, deviceId, quantity } = req.body;
   const {
-    id: adminId, role, regionId,
+    id: adminId, role, regionId, fullname,
   } = req.user;
 
   const device = await Device.findByPk(deviceId);
@@ -38,6 +38,7 @@ const createOrderHandler = asyncHandler(async (req, res) => {
       userId,
       deviceId,
       deviceName: device.name,
+      userName: fullname,
       quantity,
       totalPrice,
     },
