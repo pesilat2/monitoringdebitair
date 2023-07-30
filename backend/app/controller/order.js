@@ -3,16 +3,16 @@ const NotFoundError = require('../exeptions/NotFoundError');
 const {
   createOrder, findAllOrder, findOrderById, findOrderByUserId, deleteOrderById,
 } = require('../service/orderService');
-const { Device } = require('../models');
+const { Device, User } = require('../models');
 const AuthorizationError = require('../exeptions/AuthorizationError');
 const ClientError = require('../exeptions/ClientError');
 
 const createOrderHandler = asyncHandler(async (req, res) => {
   const { userId, deviceId, quantity } = req.body;
   const {
-    id: adminId, role, regionId, fullname,
+    id: adminId, role, regionId,
   } = req.user;
-
+  const user = await User.findByPk(userId);
   const device = await Device.findByPk(deviceId);
   if (!device) {
     throw new NotFoundError('Perangkat tidak ditemukan');
@@ -38,7 +38,7 @@ const createOrderHandler = asyncHandler(async (req, res) => {
       userId,
       deviceId,
       deviceName: device.name,
-      userName: fullname,
+      userName: user.fullname,
       quantity,
       totalPrice,
     },

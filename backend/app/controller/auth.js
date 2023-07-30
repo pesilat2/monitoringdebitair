@@ -4,12 +4,13 @@ const { createAccessToken } = require('../tokenize/TokenManager');
 const { createUser } = require('../service/userService');
 
 const userSignUp = asyncHandler(async (req, res) => {
-  const { id } = await createUser(req.body);
+  const { id, regionId } = await createUser(req.body);
 
   res.status(201).json({
     status: 'success',
     data: {
       id,
+      regionId,
     },
   });
 });
