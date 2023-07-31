@@ -7,6 +7,7 @@ const { User } = require('../models');
 
 exports.authCheck = asynchandler(async (req, res, next) => {
   const token = req.headers.authorization.split(' ')[1];
+  console.log(token);
   if (!token) {
     throw new AuthenticationError('Akses token diperlukan');
   }

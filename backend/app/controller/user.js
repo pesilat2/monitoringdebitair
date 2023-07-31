@@ -3,10 +3,16 @@ const asyncHandler = require('express-async-handler');
 const NotFoundError = require('../exeptions/NotFoundError');
 const AuthorizationError = require('../exeptions/AuthorizationError');
 const {
-  findAllUser, findUserById, findUserByEmail, updateUser, deleteUserById, updateUserProfile, currentUser,
+  findAllUser,
+  findUserById,
+  findUserByEmail,
+  updateUser,
+  deleteUserById,
+  updateUserProfile,
+  currentUser,
 } = require('../service/userService');
 
-exports.findAll = asyncHandler(async (req, res) => {
+const findAll = asyncHandler(async (req, res) => {
   const { role, regionId } = req.user;
 
   let users;
@@ -28,7 +34,7 @@ exports.findAll = asyncHandler(async (req, res) => {
   });
 });
 
-exports.findById = asyncHandler(async (req, res) => {
+const findById = asyncHandler(async (req, res) => {
   const { id: userId } = req.params;
   const { role, regionId } = req.user;
   const user = await findUserById(role, userId, regionId);
@@ -39,7 +45,7 @@ exports.findById = asyncHandler(async (req, res) => {
   });
 });
 
-exports.findByEmail = asyncHandler(async (req, res) => {
+const findByEmail = asyncHandler(async (req, res) => {
   const { email } = req.params;
   const user = await findUserByEmail(email);
   res.status(200).json({
@@ -49,7 +55,7 @@ exports.findByEmail = asyncHandler(async (req, res) => {
   });
 });
 
-exports.updateUserHandler = asyncHandler(async (req, res) => {
+const updateUserHandler = asyncHandler(async (req, res) => {
   const { fullname, email, role } = req.body;
   const { id: userId } = req.params;
   const { role: userRole, regionId } = req.user;
@@ -76,7 +82,8 @@ exports.updateUserHandler = asyncHandler(async (req, res) => {
   });
 });
 
-exports.getUserProfile = asyncHandler(async (req, res) => {
+const getUserProfile = asyncHandler(async (req, res) => {
+  console.log(req.user);
   const user = await currentUser(req.user);
 
   res.status(200).json({
@@ -87,7 +94,7 @@ exports.getUserProfile = asyncHandler(async (req, res) => {
   });
 });
 
-exports.updateUserProfileHandler = asyncHandler(async (req, res) => {
+const updateUserProfileHandler = asyncHandler(async (req, res) => {
   const {
     fullname, email, imageProfile, age, isMarried, gender,
   } = req.body;
@@ -108,7 +115,7 @@ exports.updateUserProfileHandler = asyncHandler(async (req, res) => {
   });
 });
 
-exports.deleteUser = asyncHandler(async (req, res) => {
+const deleteUser = asyncHandler(async (req, res) => {
   const { id: userId } = req.params;
   const { role: userRole, regionId } = req.user;
   await deleteUserById(userId, userRole, regionId);
@@ -117,3 +124,14 @@ exports.deleteUser = asyncHandler(async (req, res) => {
     message: `Sucessfully deleted User with id = ${req.params.id}`,
   });
 });
+
+module.exports = {
+  findAll,
+  findAllUser,
+  findByEmail,
+  deleteUser,
+  updateUserProfileHandler,
+  getUserProfile,
+  updateUserHandler,
+  findById,
+};

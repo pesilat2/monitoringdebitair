@@ -145,6 +145,7 @@ const updateUser = async (user, userRole, userId, regionId) => {
 };
 
 const currentUser = async ({ id }) => {
+  console.log(id);
   const user = await User.findOne({
     where: {
       id,

@@ -6,9 +6,9 @@ const cloudinary = require('cloudinary');
 
 // config
 cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.API_KEY,
-  api_secret: process.env.API_SECRET,
+  cloud_name: 'hikio-17',
+  api_key: '921939215128972',
+  api_secret: 'GEj0BuvOoF9nLE468oSEhV7fIjw',
 });
 
 const upload = asyncHandler(async (req, res) => {
