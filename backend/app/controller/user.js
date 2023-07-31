@@ -92,8 +92,6 @@ exports.updateUserProfileHandler = asyncHandler(async (req, res) => {
     fullname, email, imageProfile, age, isMarried, gender,
   } = req.body;
 
-  // const ageAsInteger = parseInt(age, 10);
-
   const { id } = req.user;
   await updateUserProfile(id, {
     fullname, email, imageProfile, age, isMarried, gender,
@@ -101,6 +99,12 @@ exports.updateUserProfileHandler = asyncHandler(async (req, res) => {
   res.status(200).json({
     status: 'success',
     message: 'update profil successfully',
+    fullname,
+    email,
+    imageProfile,
+    age,
+    isMarried,
+    gender,
   });
 });
 
