@@ -164,9 +164,6 @@ export default {
       createUserDataRegion: "createUserDaerah",
     };
   },
-  mounted() {
-    console.log("carditem", this.userDataRegionComputed);
-  },
   watch: {
     // Pantau perubahan pada properti dashboardType
     dashboardType: {
@@ -304,6 +301,7 @@ export default {
       data.id = "";
     },
     async createUser(userData) {
+      this.$store.commit("loading/setLoading", true);
       try {
         // Kirim permintaan ke server untuk membuat pengguna baru
         const response = await this.$axios.post("/signup", {
@@ -313,6 +311,8 @@ export default {
           password: userData.password,
           regionId: userData.regionId,
         });
+
+        console.log(response);
 
         // Jika permintaan berhasil dan server memberikan respons status 201 (Created)
         if (response.status === 201) {
@@ -353,7 +353,9 @@ export default {
             status: "error",
           });
         }
+        this.$store.commit("loading/setLoading", false);
       } catch (error) {
+        this.$store.commit("loading/setLoading", false);
         // Jika terjadi kesalahan pada permintaan atau server memberikan respons error, tampilkan pesan kesalahan (opsional)
         this.addNotification({
           message: error.response.data.message,
@@ -367,6 +369,7 @@ export default {
 
     // Fungsi untuk membuat pengguna baru daerah
     async createUserRegion(userDataRegion) {
+      this.$store.commit("loading/setLoading", true);
       try {
         const regionId = this.userDataRegionComputed.regionId;
         // Kirim permintaan ke server untuk membuat pengguna baru
@@ -377,6 +380,8 @@ export default {
           password: userDataRegion.password,
           regionId: regionId,
         });
+
+        console.log(response);
 
         // Jika permintaan berhasil dan server memberikan respons status 201 (Created)
         if (response.status === 201) {
@@ -393,7 +398,6 @@ export default {
             regionId: regionId,
           };
 
-          console.log("regionIdHarusMasuk", newUser);
           // Tambahkan pengguna baru ke dalam tabel data
           this.tableData.unshift(newUser);
 
@@ -417,7 +421,9 @@ export default {
             status: "error",
           });
         }
+        this.$store.commit("loading/setLoading", false);
       } catch (error) {
+        this.$store.commit("loading/setLoading", false);
         // Jika terjadi kesalahan pada permintaan atau server memberikan respons error, tampilkan pesan kesalahan (opsional)
         this.addNotification({
           message: error.response.data.message,
@@ -465,7 +471,7 @@ export default {
     },
 
     async createDevice(deviceData) {
-      console.log(deviceData);
+      this.$store.commit("loading/setLoading", true);
       try {
         // Kirim permintaan ke server untuk membuat pengguna baru
         const response = await this.$axios.post("/devices", {
@@ -487,7 +493,7 @@ export default {
             harga: deviceData.harga,
           };
 
-          console.log(response);
+          console.log("response devices", response);
 
           // Tambahkan pengguna baru ke dalam tabel data
           this.tableData.push(device);
@@ -512,7 +518,9 @@ export default {
             status: "error",
           });
         }
+        this.$store.commit("loading/setLoading", false);
       } catch (error) {
+        this.$store.commit("loading/setLoading", false);
         // Jika terjadi kesalahan pada permintaan atau server memberikan respons error, tampilkan pesan kesalahan (opsional)
         this.addNotification({
           message: error.response.data.message,
@@ -523,25 +531,26 @@ export default {
 
     // region
     async createRegion(regionData) {
+      this.$store.commit("loading/setLoading", true);
       try {
         // Kirim permintaan ke server untuk membuat pengguna baru
-        // const response = await this.$axios.post("/regions", {
-        //   name: regionData.nama,
-        // });
+        const response = await this.$axios.post("/regions", {
+          name: regionData.nama,
+        });
 
-        const response = await fetch(
-          "https://monitoring-debit-air.vercel.app/api/regions",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzZXItdmpPcjRNQ2tDbVJXZ1c0QXRvMGJBIiwiaWF0IjoxNjkwNTY5NzM0LCJleHAiOjE2OTA2NTYxMzR9.8z5K-Rldo1M_DcY7GNU5bZU5JIx8HMfJ8Ho1QkBCe8A`,
-            },
-            body: JSON.stringify({
-              name: regionData.nama,
-            }),
-          }
-        );
+        // const response = await fetch(
+        //   "https://monitoring-debit-air.vercel.app/api/regions",
+        //   {
+        //     method: "POST",
+        //     headers: {
+        //       "Content-Type": "application/json",
+        //       Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzZXItdmpPcjRNQ2tDbVJXZ1c0QXRvMGJBIiwiaWF0IjoxNjkwNTY5NzM0LCJleHAiOjE2OTA2NTYxMzR9.8z5K-Rldo1M_DcY7GNU5bZU5JIx8HMfJ8Ho1QkBCe8A`,
+        //     },
+        //     body: JSON.stringify({
+        //       name: regionData.nama,
+        //     }),
+        //   }
+        // );
         console.log("respon", response);
         // Jika permintaan berhasil dan server memberikan respons status 201 (Created)
         if (response.status === 201) {
@@ -567,8 +576,8 @@ export default {
             status: "success",
           });
 
+          regionData.nama = "";
           this.showConfirmationRegion = false;
-          // this.resetFormData(newRegion);
         } else {
           // Jika server memberikan respons selain 201, maka tampilkan pesan kesalahan (opsional)
           this.addNotification({
@@ -576,7 +585,10 @@ export default {
             status: "error",
           });
         }
+        this.$store.commit("loading/setLoading", false);
       } catch (error) {
+        this.$store.commit("loading/setLoading", false);
+
         // Jika terjadi kesalahan pada permintaan atau server memberikan respons error, tampilkan pesan kesalahan (opsional)
         this.addNotification({
           message: error.response.data.message,

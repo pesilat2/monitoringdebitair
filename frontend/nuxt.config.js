@@ -55,7 +55,7 @@ export default {
             propertyName: "data.accessToken",
           },
           user: {
-            url: "https://monitoring-debit-air.vercel.app/api/me",
+            url: "me",
             method: "get",
             propertyName: "data.user",
           },

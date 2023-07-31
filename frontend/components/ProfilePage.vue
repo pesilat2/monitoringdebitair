@@ -62,7 +62,7 @@
       </div>
 
       <div class="w-full">
-        <ItemProfile label="Alamat" :fill="loggedInUser.address || ''" />
+        <ItemProfile label="Alamat" :fill="loggedInUser.Region.name || ''" />
         <ItemProfile label="Umur" :fill="loggedInUser.age" />
         <ItemProfile
           label="jenis Kelamin"
