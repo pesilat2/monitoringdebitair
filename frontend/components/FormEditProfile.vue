@@ -1,7 +1,7 @@
 <template>
   <div
     :class="` bg-white h-full rounded-xl transition-all duration-300 ${
-      isEdit ? '  col-span-3 md:col-span-2 translate-x-[0]' : ' hidden'
+      isEdit ? '  col-span-3 lg:col-span-2 translate-x-[0]' : ' hidden'
     }`"
   >
     <div class="w-full py-6 px-10 border-b-2 border-[#4A55A2]">
@@ -90,8 +90,8 @@ export default {
         isMarried: "",
       },
       selectIsMarried: [
-        { id: "menikah", name: "Menikah", value: true },
-        { id: "belum-menikah", name: "Belum Menikah", value: false },
+        { id: "menikah", name: "Menikah", value: 1 },
+        { id: "belum-menikah", name: "Belum Menikah", value: 0 },
       ],
       selectGender: [
         { id: "laki-laki", name: "Laki-laki", value: "MALE" },
@@ -103,7 +103,7 @@ export default {
     ...mapGetters(["loggedInUser"]),
   },
   methods: {
-    ...mapMutations(["addNotification"]),
+    ...mapMutations(["addNotification", "editDataProfile"]),
     closeEditForm() {
       this.$emit("closeEditForm");
       this.editForm = {
@@ -113,11 +113,18 @@ export default {
         gender: this.loggedInUser.gender,
         isMarried: this.loggedInUser.isMarried,
       };
+      console.log(this.editForm);
     },
     async submitEditProfile() {
-      await this.$axios.put("/update/me", {
-        ...this.editForm,
-      });
+      await this.$axios
+        .put("/me", {
+          ...this.editForm,
+        })
+        .then((result) => {
+          this.editDataProfile(result.data);
+        })
+        .catch((err) => {});
+
       this.addNotification({
         status: "success",
         message: "Profile berhasil diubah",

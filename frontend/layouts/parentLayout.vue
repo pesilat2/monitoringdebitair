@@ -1,6 +1,6 @@
 <!-- layouts/parentLayout.vue -->
 <template>
-  <div>
+  <div class="overflow-hidden w-full relative">
     <Notification :duration="5000" />
     <transition name="fade" mode="out-in" />
     <slot />

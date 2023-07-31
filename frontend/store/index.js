@@ -15,6 +15,12 @@ export const mutations = {
   clearCart(state) {
     state.items = [];
   },
+  editPhotoProfile(state, imageProfile) {
+    state.auth.user = { ...state.auth.user, imageProfile };
+  },
+  editDataProfile(state, dataProfile) {
+    state.auth.user = { ...state.auth.user, ...dataProfile };
+  },
 };
 
 export const getters = {

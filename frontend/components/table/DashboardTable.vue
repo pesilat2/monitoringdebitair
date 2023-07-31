@@ -275,7 +275,7 @@ export default {
             { key: "nama", label: "Nama" },
             { key: "email", label: "Email" },
             { key: "role", label: "Role" },
-            { key: "regionId", label: "Id Region" },
+            { key: "region", label: "Nama Desa" },
           ];
         case "daftarPenggunaDaerah":
           return [

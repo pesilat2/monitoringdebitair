@@ -25,17 +25,17 @@
     </div>
     <div v-else>
       <div
-        class="bg-black/40 rounded-xl shadow-xl w-full h-[440px] cursor-wait"
+        class="bg-black/40 rounded-xl shadow-xl w-full h-[440px] animate-pulse cursor-wait"
       />
       <div class="mt-4 grid grid-cols-3 gap-4">
         <div
-          class="col-span-1 h-[140px] bg-black/40 rounded-xl cursor-wait"
+          class="col-span-1 h-[140px] bg-black/40 rounded-xl animate-pulse cursor-wait"
         ></div>
         <div
-          class="col-span-1 h-[140px] bg-black/40 rounded-xl cursor-wait"
+          class="col-span-1 h-[140px] bg-black/40 rounded-xl animate-pulse cursor-wait"
         ></div>
         <div
-          class="col-span-1 h-[140px] bg-black/40 rounded-xl cursor-wait"
+          class="col-span-1 h-[140px] bg-black/40 rounded-xl animate-pulse cursor-wait"
         ></div>
       </div>
     </div>
@@ -56,7 +56,24 @@ export default {
         let labels = [];
         let data = [];
         this.dataStatistik.dailyStatistics.map((item) => {
-          labels.unshift(item.date);
+          const dateObject = new Date(item.date);
+
+          // Daftar nama hari dalam bahasa Inggris
+          const daysOfWeek = [
+            "Minggu",
+            "Senin",
+            "Selasa",
+            "Rabu",
+            "Kamis",
+            "Jum'at",
+            "Sabtu",
+          ];
+
+          const dayIndex = dateObject.getUTCDay();
+
+          const dayName = daysOfWeek[dayIndex];
+
+          labels.unshift(dayName);
           data.unshift(item.quantity);
           return;
         });
@@ -87,11 +104,12 @@ export default {
           }
           return;
         });
-        console.log(this.selectVarianStatistic);
       })
       .catch((err) => {});
   },
-  mounted() {},
+  mounted() {
+    console.log(this.dataStatistik);
+  },
   data() {
     return {
       dataStatistik: {},
@@ -128,7 +146,26 @@ export default {
         let labels = [];
         let data = [];
         this.dataStatistik.dailyStatistics.map((item) => {
-          labels.unshift(item.date);
+          const dateObject = new Date(item.date);
+
+          // Daftar nama hari dalam bahasa Inggris
+          const daysOfWeek = [
+            "Minggu",
+            "Senin",
+            "Selasa",
+            "Rabu",
+            "Kamis",
+            "Jum'at",
+            "Sabtu",
+          ];
+
+          const dayIndex = dateObject.getUTCDay();
+
+          const dayName = daysOfWeek[dayIndex];
+
+          console.log(dayName); // Output: "Sunday"
+
+          labels.unshift(dayName);
           data.unshift(item.quantity);
           return;
         });
@@ -157,14 +194,36 @@ export default {
         let labels = [];
         let data = [];
         this.dataStatistik.monthlyStatistics.map((item) => {
-          labels.push(item.date);
+          const dateObject = new Date(item.startDate);
+
+          const months = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+          ];
+
+          const monthIndex = dateObject.getUTCMonth();
+
+          // Mendapatkan nama bulan dari daftar months berdasarkan indeks
+          const monthName = months[monthIndex];
+
+          labels.push(monthName);
           data.push(item.quantity);
         });
         this.dataChart = {
           data: data,
           labels: labels,
         };
-        console.log("mounlty", this.dataChart);
+        console.log("mounlty", this.dataStatistik.monthlyStatistics);
       }
     },
   },

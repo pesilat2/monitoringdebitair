@@ -62,16 +62,11 @@
       </div>
 
       <div class="w-full">
-        <ItemProfile label="Alamat" :fill="loggedInUser.address || ''" />
+        <ItemProfile label="Daerah" :fill="loggedInUser.Region.name" />
+
         <ItemProfile label="Umur" :fill="getAge" />
-        <ItemProfile
-          label="jenis Kelamin"
-          :fill="loggedInUser.gender === 'MALE' ? 'Laki-Laki' : 'Perempuan'"
-        />
-        <ItemProfile
-          label="Status Pernikahan"
-          :fill="loggedInUser.isMarried ? 'Sudah Menikah' : 'Belum Menikah'"
-        />
+        <ItemProfile label="jenis Kelamin" :fill="gender" />
+        <ItemProfile label="Status Pernikahan" :fill="isMarried" />
       </div>
     </div>
   </div>
@@ -92,12 +87,36 @@ export default {
   computed: {
     ...mapGetters(["loggedInUser"]),
     getAge() {
-      const age = new Date().getFullYear() - this.loggedInUser.age;
-      return age + " Tahun";
+      const birthDate = new Date(this.loggedInUser.age);
+      const today = new Date();
+      const timeDifference = today.getTime() - birthDate.getTime();
+      const ageInMilliseconds = new Date(timeDifference);
+      const ageInYears = ageInMilliseconds.getUTCFullYear() - 1970;
+      return ageInYears + " Tahun";
+    },
+    gender() {
+      let gender = "";
+      if (this.loggedInUser.gender === "MALE") {
+        gender = "Laki-Laki";
+      } else if (this.loggedInUser.gender === "FEMALE") {
+        gender = "Perempuan";
+      } else {
+        gender = "";
+      }
+      return gender;
+    },
+    isMarried() {
+      if (parseInt(this.loggedInUser.isMarried) === 1) {
+        return "Menikah";
+      } else if (parseInt(this.loggedInUser.isMarried) === 0) {
+        return "Belum Menikah";
+      } else {
+        return "";
+      }
     },
   },
   methods: {
-    ...mapMutations(["addNotification"]),
+    ...mapMutations(["addNotification", "editPhotoProfile"]),
     showEditForm() {
       this.$emit("showEditForm");
     },
@@ -129,20 +148,25 @@ export default {
           });
           this.previewUrl = res.data.url;
         } catch (error) {
+          this.base64Url = null;
+          this.previewUrl = "";
           this.addNotification({
             status: "error",
             message: error.response.data.message,
           });
         }
-        await this.$axios.put("update/me", {
-          imageProfile: this.previewUrl,
-        });
-        this.base64Url = null;
-        this.previewUrl = "";
-        this.addNotification({
-          status: "success",
-          message: "Photo profil berhasil di ubah",
-        });
+        if (this.base64Url && this.previewUrl) {
+          await this.$axios.put("me", {
+            imageProfile: this.previewUrl,
+          });
+          this.editPhotoProfile(this.previewUrl);
+          this.base64Url = null;
+          this.previewUrl = "";
+          this.addNotification({
+            status: "success",
+            message: "Photo profil berhasil di ubah",
+          });
+        }
       } catch (error) {
         this.base64Url = null;
         this.previewUrl = "";

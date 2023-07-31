@@ -32,7 +32,7 @@ export default {
   },
   async fetch() {
     try {
-      const data = await this.$axios.$get("/findAll/users");
+      const data = await this.$axios.$get("/users");
       const users = data.data.map((user, index) => {
         return {
           id: user.id,
@@ -41,9 +41,11 @@ export default {
           email: user.email,
           role: user.role,
           regionId: user.regionId,
+          region: { ...user.Region }.name,
         };
       });
       console.log(data);
+      console.log(users);
       this.tableData = users;
     } catch (err) {
       this.error = err;
