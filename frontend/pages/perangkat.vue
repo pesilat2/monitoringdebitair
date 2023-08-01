@@ -35,11 +35,13 @@ export default {
           index: index + 1,
           id: device.id,
           id_region: device.regionId,
+          regionName: device.Region.name,
           nama_perangkat: device.name,
           maksimum_air: device.max,
           harga: device.price,
         };
       });
+      console.log("desa", devices);
       this.tableData = devices;
       this.$store.commit("loading/setLoading", false);
     } catch (err) {

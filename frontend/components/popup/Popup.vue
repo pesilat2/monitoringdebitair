@@ -6,7 +6,17 @@
     <div class="bg-white p-8 rounded-lg max-w-sm">
       <h2 class="text-lg font-semibold mb-4">{{ title }}</h2>
       <p class="text-base mb-6">{{ message }}</p>
-      <div class="flex justify-end">
+      <div v-if="loading" class="flex justify-end">
+        <slot name="loading">
+          <button
+            disabled
+            class="bg-primary/50 text-white px-4 py-2 rounded-lg"
+          >
+            Loading...
+          </button>
+        </slot>
+      </div>
+      <div v-else class="flex justify-end">
         <slot name="no">
           <button @click="closePopup" class="mr-4">Tidak</button>
         </slot>
@@ -24,6 +34,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   props: {
     showPopup: {
@@ -46,6 +57,11 @@ export default {
     confirmAction() {
       this.$emit("confirmed");
     },
+  },
+  computed: {
+    ...mapState({
+      loading: (state) => state.loading.loading,
+    }),
   },
 };
 </script>

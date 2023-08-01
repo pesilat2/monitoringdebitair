@@ -38,6 +38,7 @@ export default {
           nama: region.name,
         };
       });
+      console.log(data);
       console.log(regions);
       this.tableData = regions;
       this.$store.commit("loading/setLoading", false);

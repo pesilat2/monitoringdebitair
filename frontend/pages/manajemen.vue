@@ -33,15 +33,16 @@ export default {
   async fetch() {
     try {
       const data = await this.$axios.$get("/users");
-      const users = data.data.map((user, index) => {
+      const users = data.data.map((user, i) => {
+        // console.log(typeof user.Region.name);
         return {
           id: user.id,
-          index: index + 1,
+          index: i + 1,
           nama: user.fullname,
           email: user.email,
           role: user.role,
+          regionName: { ...user.Region }.name,
           regionId: user.regionId,
-          region: { ...user.Region }.name,
         };
       });
       this.tableData = users;

@@ -66,15 +66,12 @@
       />
 
       <table class="w-full table-auto">
-        <!-- <colgroup>
-          <col v-for="column in tableColumns" :key="column.key" />
-        </colgroup> -->
         <thead>
           <tr>
             <th
               v-for="column in tableColumns"
               :key="column.key"
-              class="border-b border-primary_dark text-primary px-4 py-2 text-center text-heading-4"
+              class="border-b border-primary_dark text-primary px-4 py-2 text-heading-4"
             >
               {{ column.label }}
             </th>
@@ -104,9 +101,38 @@
             </th>
           </tr>
         </thead>
-        <!-- <tbody class="mt-8" v-if="loading">
+        <!-- <tbody class="pt-12">
           <tr>
-            <td rowspan="6" colspan="6">
+            <td
+              class="px-8 py-10 text-center text-base lg:text-md"
+              :key="column.key"
+            >
+              <SkletonDasboardTable />
+            </td>
+            <td
+              v-if="dashboardType === 'daftarPengguna'"
+              class="px-8 py-10 text-center text-base lg:text-md"
+            >
+              <SkletonDasboardTable />
+            </td>
+            <td
+              v-if="dashboardType === 'daftarPenggunaDaerah'"
+              class="px-8 py-10 text-center text-base lg:text-md"
+            >
+              <SkletonDasboardTable />
+            </td>
+
+            <td
+              v-if="dashboardType === 'daftarDesa'"
+              class="px-8 py-10 text-center text-base lg:text-md"
+            >
+              <SkletonDasboardTable />
+            </td>
+
+            <td
+              v-if="dashboardType === 'daftarPerangkat'"
+              class="px-8 py-10 text-center text-base lg:text-md"
+            >
               <SkletonDasboardTable />
             </td>
           </tr>
@@ -116,13 +142,17 @@
             <td
               v-for="column in tableColumns"
               :key="column.key"
-              class="border-b border-primary_dark text-primary px-4 py-2 text-center text-base lg:text-md"
+              class="border-b border-primary_dark text-primary px-4 py-2 text-base lg:text-md"
             >
               <template>
                 {{
                   column.key === "jumlahPengguna"
                     ? item[column.key] + " orang"
                     : column.key === "pengeluaranAir"
+                    ? item[column.key] + " liter/hari"
+                    : column.key === "harga"
+                    ? toCurrencySting(item[column.key])
+                    : column.key === "maksimum_air"
                     ? item[column.key] + " liter/hari"
                     : item[column.key]
                 }}
@@ -275,7 +305,7 @@ export default {
             { key: "nama", label: "Nama" },
             { key: "email", label: "Email" },
             { key: "role", label: "Role" },
-            { key: "region", label: "Nama Desa" },
+            { key: "regionName", label: "Nama Desa" },
           ];
         case "daftarPenggunaDaerah":
           return [
@@ -287,7 +317,7 @@ export default {
         case "daftarPerangkat":
           return [
             { key: "index", label: "No" },
-            { key: "id_region", label: "Id Region" },
+            { key: "regionName", label: "Nama Desa" },
             { key: "nama_perangkat", label: "Nama Perangkat" },
             { key: "maksimum_air", label: "Maksimal Air" },
             { key: "harga", label: "Harga" },
@@ -295,7 +325,7 @@ export default {
         case "daftarDesa":
           return [
             { key: "index", label: "No" },
-            { key: "id", label: "Id Region" },
+            { key: "id", label: "Id Desa" },
             { key: "nama", label: "Nama Desa" },
           ];
         default:
@@ -324,10 +354,20 @@ export default {
       this.currentPage = page;
     },
 
+    toCurrencySting(number) {
+      return number.toLocaleString("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      });
+    },
+
     async updateUser(id, userData) {
+      this.$store.commit("loading/setLoading", true);
       try {
         // Kirim permintaan ke server untuk mengubah peran pengguna
-        const response = await this.$axios.put(`/update/user/${id}`, {
+        const response = await this.$axios.put(`/users/${id}`, {
           ...userData,
           fullname: userData.nama,
           email: userData.email,
@@ -353,7 +393,9 @@ export default {
           });
           // Jika server memberikan respons selain 200, maka tampilkan pesan kesalahan (opsional)
         }
+        this.$store.commit("loading/setLoading", false);
       } catch (error) {
+        this.$store.commit("loading/setLoading", false);
         this.addNotification({
           message: error.response.data.message,
           status: "error",
@@ -386,8 +428,9 @@ export default {
       }
     },
     async deleteUser(id) {
+      this.$store.commit("loading/setLoading", true);
       try {
-        const response = await this.$axios.delete(`/delete/user/${id}`);
+        const response = await this.$axios.delete(`/users/${id}`);
         if (response.status === 200) {
           this.$emit("delete-user", id);
           this.addNotification({
@@ -401,7 +444,9 @@ export default {
             status: "error",
           });
         }
+        this.$store.commit("loading/setLoading", false);
       } catch (error) {
+        this.$store.commit("loading/setLoading", false);
         this.addNotification({
           message: error.response.data.message,
           status: "error",
@@ -415,9 +460,10 @@ export default {
 
     // user by region
     async updateUserRegion(id, userRegionData) {
+      this.$store.commit("loading/setLoading", true);
       try {
         // Kirim permintaan ke server untuk mengubah peran pengguna
-        const response = await this.$axios.put(`/update/user/${id}`, {
+        const response = await this.$axios.put(`/users/${id}`, {
           ...userRegionData,
           fullname: userRegionData.nama,
           email: userRegionData.email,
@@ -443,7 +489,9 @@ export default {
           });
           // Jika server memberikan respons selain 200, maka tampilkan pesan kesalahan (opsional)
         }
+        this.$store.commit("loading/setLoading", false);
       } catch (error) {
+        this.$store.commit("loading/setLoading", false);
         this.addNotification({
           message: error.response.data.message,
           status: "error",
@@ -476,8 +524,9 @@ export default {
       }
     },
     async deleteUserRegion(id) {
+      this.$store.commit("loading/setLoading", true);
       try {
-        const response = await this.$axios.delete(`/delete/user/${id}`);
+        const response = await this.$axios.delete(`/users/${id}`);
         if (response.status === 200) {
           this.$emit("delete-user-region", id);
           this.addNotification({
@@ -491,7 +540,9 @@ export default {
             status: "error",
           });
         }
+        this.$store.commit("loading/setLoading", false);
       } catch (error) {
+        this.$store.commit("loading/setLoading", false);
         this.addNotification({
           message: error.response.data.message,
           status: "error",
@@ -529,6 +580,7 @@ export default {
     },
 
     async updateDevice(id, deviceData) {
+      this.$store.commit("loading/setLoading", true);
       try {
         // Kirim permintaan ke server untuk mengubah peran pengguna
         console.log(deviceData);
@@ -558,7 +610,9 @@ export default {
           });
           // Jika server memberikan respons selain 200, maka tampilkan pesan kesalahan (opsional)
         }
+        this.$store.commit("loading/setLoading", false);
       } catch (error) {
+        this.$store.commit("loading/setLoading", false);
         this.addNotification({
           message: error.response.data.message,
           status: "error",
@@ -571,6 +625,7 @@ export default {
     },
 
     async deleteDevice(id) {
+      this.$store.commit("loading/setLoading", true);
       try {
         const response = await this.$axios.delete(`/devices/${id}`);
         if (response.status === 200) {
@@ -586,7 +641,9 @@ export default {
             status: "error",
           });
         }
+        this.$store.commit("loading/setLoading", false);
       } catch (error) {
+        this.$store.commit("loading/setLoading", false);
         this.addNotification({
           message: error.response.data.message,
           status: "error",
@@ -616,26 +673,24 @@ export default {
     },
 
     async updateRegion(id, regionData) {
+      this.$store.commit("loading/setLoading", true);
       try {
-        // Kirim permintaan ke server untuk mengubah peran pengguna
+        // const requestOptions = {
+        //   method: "PUT",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+        //   body: JSON.stringify({
+        //     name: regionData.nama,
+        //   }),
+        // };
 
-        console.log(regionData);
-        const requestOptions = {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: regionData.nama,
-          }),
-        };
+        const response = await this.$axios.put(`/regions/${id}`, {
+          // ...regionData,
+          name: regionData.nama,
+        });
 
-        // const response = await this.$axios.put(`/regions/${id}`, {
-        //   // ...regionData,
-        //   name: regionData.nama,
-        // });
-
-        const response = await fetch(`/regions/${id}`, requestOptions);
+        // const response = await fetch(`/regions/${id}`, requestOptions);
 
         // Jika permintaan berhasil dan server memberikan respons status 200 (OK)
         if (response.status === 200) {
@@ -655,7 +710,9 @@ export default {
           });
           // Jika server memberikan respons selain 200, maka tampilkan pesan kesalahan (opsional)
         }
+        this.$store.commit("loading/setLoading", false);
       } catch (error) {
+        this.$store.commit("loading/setLoading", false);
         this.addNotification({
           message: error.response.data.message,
           status: "error",
@@ -669,6 +726,7 @@ export default {
     },
 
     async deleteRegion(id) {
+      this.$store.commit("loading/setLoading", true);
       try {
         const response = await this.$axios.delete(`/regions/${id}`);
         if (response.status === 200) {
@@ -684,7 +742,9 @@ export default {
             status: "error",
           });
         }
+        this.$store.commit("loading/setLoading", false);
       } catch (error) {
+        this.$store.commit("loading/setLoading", false);
         this.addNotification({
           message: error.response.data.message,
           status: "error",

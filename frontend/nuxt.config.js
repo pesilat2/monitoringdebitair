@@ -55,7 +55,7 @@ export default {
             propertyName: "data.accessToken",
           },
           user: {
-            url: "/me",
+            url: "me",
             method: "get",
             propertyName: "data.user",
           },

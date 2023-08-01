@@ -32,5 +32,29 @@ export default {
       }
     },
   },
+  mounted() {
+    console.log(this.listOrder);
+  },
+  async fetch() {
+    try {
+      const res = await this.$axios.$get("/orders");
+      const data = res.data.map((order, index) => {
+        return {
+          id: order.id,
+          index: index + 1,
+          quantity: order.quantity,
+          totalPrice: order.totalPrice,
+          userId: order.userId,
+          deviceId: order.deviceId,
+          fullname: order.User.fullname,
+          deviceName: order.Device.name,
+        };
+      });
+      console.log("data order", data);
+      this.listOrder = data;
+    } catch (error) {
+      console.log(error);
+    }
+  },
 };
 </script>
