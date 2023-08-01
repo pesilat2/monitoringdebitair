@@ -118,4 +118,5 @@ export default {
     left: -100%;
   }
 }
+ 
 </style>

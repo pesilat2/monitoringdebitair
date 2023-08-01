@@ -8,14 +8,6 @@
       <div>
         <Statistik />
       </div>
-      <div class="mt-4">
-        <CardItemLaporan
-          :title="titleCard"
-          :placeholder="placeholderCard"
-          :tableData="tableData"
-          :dashboardType="dashboardType"
-        />
-      </div>
     </div>
   </div>
 </template>

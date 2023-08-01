@@ -44,8 +44,6 @@ export default {
           region: { ...user.Region }.name,
         };
       });
-      console.log(data);
-      console.log(users);
       this.tableData = users;
     } catch (err) {
       this.error = err;
