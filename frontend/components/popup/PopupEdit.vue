@@ -129,6 +129,7 @@ export default {
         role: "USER",
         password: "",
         regionId: "",
+        regionName: "",
       }),
     },
     type: {

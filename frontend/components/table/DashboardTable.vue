@@ -305,7 +305,7 @@ export default {
             { key: "nama", label: "Nama" },
             { key: "email", label: "Email" },
             { key: "role", label: "Role" },
-            { key: "regionName", label: "Nama Desa" },
+            { key: "regionId", label: "Id Desa" },
           ];
         case "daftarPenggunaDaerah":
           return [
@@ -364,6 +364,7 @@ export default {
     },
 
     async updateUser(id, userData) {
+      console.log("userData======", userData);
       this.$store.commit("loading/setLoading", true);
       try {
         // Kirim permintaan ke server untuk mengubah peran pengguna
@@ -375,10 +376,22 @@ export default {
           regionId: userData.regionId,
         });
 
+        console.log("response edit", response);
+
+        const newUserData = {
+          ...userData,
+          fullname: userData.nama,
+          email: userData.email,
+          role: userData.role,
+          regionId: userData.regionId,
+          regionName: response.data.data.Region.name,
+        };
+        console.log("response edit", newUserData);
+
         // Jika permintaan berhasil dan server memberikan respons status 200 (OK)
         if (response.status === 200) {
           // Emit event untuk memberi tahu parent bahwa peran telah diubah
-          this.$emit("user-changed", id, userData);
+          this.$emit("user-changed", id, newUserData);
 
           // Beritahu pengguna bahwa peran telah diubah dengan sukses (opsional)
           this.addNotification({
@@ -685,6 +698,8 @@ export default {
         //   }),
         // };
 
+        console.log("nama desa ni bos", regionData.nama);
+
         const response = await this.$axios.put(`/regions/${id}`, {
           // ...regionData,
           name: regionData.nama,
@@ -699,13 +714,13 @@ export default {
 
           // Beritahu pengguna bahwa peran telah diubah dengan sukses (opsional)
           this.addNotification({
-            message: "Perangkat berhasil diubah.",
+            message: "Desa berhasil diubah.",
             status: "success",
           });
-          this.showConfirmationDevice = false;
+          this.showConfirmationRegion = false;
         } else {
           this.addNotification({
-            message: "Gagal mengubah perangkat.",
+            message: "Gagal mengubah Desa.",
             status: "error",
           });
           // Jika server memberikan respons selain 200, maka tampilkan pesan kesalahan (opsional)
