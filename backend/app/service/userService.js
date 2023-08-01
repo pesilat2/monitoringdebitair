@@ -24,16 +24,21 @@ const createUser = async ({
     throw new InvariantError('Email sudah digunakan');
   }
 
+  const region = await Region.findOne({
+    where: {
+      id: regionId,
+    },
+  });
+
   const user = {
     id,
     fullname,
     email,
     regionId,
     password: await bcrypt.hashSync(password, 10),
-
   };
   const newUser = await User.create(user);
-
+  newUser.region = region.name;
   return newUser;
 };
 

@@ -26,7 +26,7 @@ const findAllOrder = async (userRole, regionId) => {
       include: [
         {
           model: Device,
-          attributes: ['name', 'max', 'price'],
+          attributes: ['name'],
           include: [
             {
               model: Region,
