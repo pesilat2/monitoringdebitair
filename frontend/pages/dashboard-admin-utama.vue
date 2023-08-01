@@ -6,10 +6,7 @@
         Laporan Debit Air Keluar Semua Daerah
       </h1>
       <div>
-        <Chart />
-      </div>
-      <div class="mt-4">
-        <CardStatistik />
+        <Statistik />
       </div>
       <div class="mt-4">
         <CardItemLaporan
@@ -25,9 +22,8 @@
 
 <script>
 import Header from "~/components/Header.vue";
-import Chart from "~/components/Chart.vue";
-import CardStatistik from "~/components/CardStatistik.vue";
 import CardItemLaporan from "~/components/card/CardItemLaporan.vue";
+import Statistik from "~/components/statistik/Statistik.vue";
 import { dashboardData } from "~/helper/dataTableLaporan";
 import { mapGetters } from "vuex";
 
@@ -39,8 +35,8 @@ export default {
   components: {
     Header,
     Chart,
-    CardStatistik,
     CardItemLaporan,
+    Statistik,
   },
   data() {
     return {
@@ -53,6 +49,17 @@ export default {
     };
   },
   async fetch() {
+    // fetch data
+    // await this.$axios
+    //   .$get("/cobareport")
+    //   .then((data) => {
+    //     console.log(data);
+    //   })
+    //   .catch((err) => {
+    //     this.error = err;
+    //   });
+
+    // fetch regions
     await this.$axios
       .$get("/regions")
       .then((data) => {

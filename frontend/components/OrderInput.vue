@@ -70,7 +70,7 @@
         class="col-span-3 h-17 flex justify-center items-center border-2 border-primary"
       >
         <h1 class="text-primary_dark text-heading-4 font-heading-1">
-          {{ this.$auth.user.deviceName }}
+          {{ this.$auth.user.device.name }}
         </h1>
       </div>
       <div
@@ -128,6 +128,9 @@ export default {
       return this.loading ? "Loading..." : "Pesan";
     },
   },
+  mounted() {
+    console.log(this.$auth.user);
+  },
   methods: {
     ...mapMutations(["addNotification"]),
     adminDaerah() {
@@ -135,7 +138,7 @@ export default {
     },
     onclick() {
       this.dataOrder = {
-        deviceId: this.$auth.user.deviceId,
+        deviceId: this.$auth.user.device.id,
         quantity: parseInt(this.dataOrder.quantity),
         userId: this.dataOrder.userId,
         totalPrice: this.totalPrice,

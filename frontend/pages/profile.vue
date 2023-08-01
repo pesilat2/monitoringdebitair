@@ -1,7 +1,7 @@
 <template>
   <div class="w-full overflow-y-auto">
     <Header :title="headerTitle" :iconClasses="headerClass" />
-    <div class="grid grid-cols-3 p-4 w-full gap-6 transition-all">
+    <div class="grid grid-cols-3 p-4 w-full gap-6 transition-all duration-300">
       <!-- profile -->
       <ProfilePage :isEdit="editProfile" @showEditForm="showEditForm" />
       <!-- edit profile -->

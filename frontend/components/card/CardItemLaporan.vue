@@ -472,13 +472,14 @@ export default {
 
     async createDevice(deviceData) {
       this.$store.commit("loading/setLoading", true);
+      console.log(typeof deviceData.harga);
       try {
         // Kirim permintaan ke server untuk membuat pengguna baru
         const response = await this.$axios.post("/devices", {
           regionId: deviceData.id_region,
-          name: deviceData.nama_perangkat,
-          max: deviceData.maksimum_air,
-          price: deviceData.harga,
+          regionName: deviceData.nama_perangkat,
+          max: parseInt(deviceData.maksimum_air),
+          price: parseInt(deviceData.harga),
         });
 
         // Jika permintaan berhasil dan server memberikan respons status 201 (Created)
@@ -489,11 +490,12 @@ export default {
             index: 1,
             id_region: deviceData.id_region,
             nama_perangkat: deviceData.nama_perangkat,
-            maksimum_air: deviceData.maksimum_air,
-            harga: deviceData.harga,
+            maksimum_air: parseInt(deviceData.maksimum_air),
+            harga: parseInt(deviceData.harga),
+            regionName: deviceData.nama_perangkat,
           };
 
-          console.log("response devices", response);
+          console.log("response devices", device);
 
           // Tambahkan pengguna baru ke dalam tabel data
           this.tableData.push(device);

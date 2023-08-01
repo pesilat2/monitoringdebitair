@@ -50,6 +50,7 @@ export default {
           deviceName: order.Device.name,
         };
       });
+      console.log("data order", data);
       this.listOrder = data;
     } catch (error) {
       console.log(error);

@@ -9,7 +9,9 @@
 export default {
   props: {
     label: String,
-    fill: String,
+    fill: {
+      type: [Number, String, Boolean],
+    },
   },
 };
 </script>

@@ -101,7 +101,7 @@
             </th>
           </tr>
         </thead>
-        <!-- <tbody v-if="loading" class="pt-12">
+        <!-- <tbody class="pt-12">
           <tr>
             <td
               class="px-8 py-10 text-center text-base lg:text-md"
@@ -463,7 +463,7 @@ export default {
       this.$store.commit("loading/setLoading", true);
       try {
         // Kirim permintaan ke server untuk mengubah peran pengguna
-        const response = await this.$axios.put(`/update/user/${id}`, {
+        const response = await this.$axios.put(`/users/${id}`, {
           ...userRegionData,
           fullname: userRegionData.nama,
           email: userRegionData.email,
@@ -526,7 +526,7 @@ export default {
     async deleteUserRegion(id) {
       this.$store.commit("loading/setLoading", true);
       try {
-        const response = await this.$axios.delete(`/delete/user/${id}`);
+        const response = await this.$axios.delete(`/users/${id}`);
         if (response.status === 200) {
           this.$emit("delete-user-region", id);
           this.addNotification({
@@ -675,22 +675,22 @@ export default {
     async updateRegion(id, regionData) {
       this.$store.commit("loading/setLoading", true);
       try {
-        const requestOptions = {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: regionData.nama,
-          }),
-        };
+        // const requestOptions = {
+        //   method: "PUT",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+        //   body: JSON.stringify({
+        //     name: regionData.nama,
+        //   }),
+        // };
 
-        // const response = await this.$axios.put(`/regions/${id}`, {
-        //   // ...regionData,
-        //   name: regionData.nama,
-        // });
+        const response = await this.$axios.put(`/regions/${id}`, {
+          // ...regionData,
+          name: regionData.nama,
+        });
 
-        const response = await fetch(`/regions/${id}`, requestOptions);
+        // const response = await fetch(`/regions/${id}`, requestOptions);
 
         // Jika permintaan berhasil dan server memberikan respons status 200 (OK)
         if (response.status === 200) {

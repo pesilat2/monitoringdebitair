@@ -1,7 +1,9 @@
 <template>
   <div
-    :class="`absolute right-4 top-4 scale-0  z-[100] transition-transform duration-300  ease-out   ${
-      notification.message && ' scale-100 popup overlay'
+    :class="`absolute right-8 top-8  z-[100] transition-transform duration-300  ease-out   ${
+      notification.message
+        ? ' translate-x-[0] popup overlay'
+        : 'translate-x-[120%]'
     }`"
   >
     <div class="relative rounded-md overflow-hidden">

@@ -19,7 +19,7 @@
           <label for="max" class="block font-medium">Maksimum Air</label>
           <input
             v-model="device.maksimum_air"
-            type="text"
+            type="number"
             id="max"
             class="w-full border border-gray-300 rounded-lg px-4 py-2"
           />
@@ -28,7 +28,7 @@
           <label for="price" class="block font-medium">Harga</label>
           <input
             v-model="device.harga"
-            type="text"
+            type="number"
             id="price"
             class="w-full border border-gray-300 rounded-lg px-4 py-2"
           />
@@ -98,8 +98,8 @@ export default {
       default: () => ({
         id_region: "",
         nama_perangkat: "",
-        maksimum_air: "",
-        harga: "",
+        maksimum_air: 0,
+        harga: 0,
       }),
     },
     type: {

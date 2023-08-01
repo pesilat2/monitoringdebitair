@@ -1,7 +1,7 @@
 <template>
   <section>
     <div
-      class="fixed hidden -left-full top-0 lg:opacity-100 lg:left-0 lg:block min-h-screen h-full w-[300px] bg-white shadow-custom z-20"
+      class="fixed hidden -left-full top-0 lg:opacity-100 lg:left-0 lg:block min-h-screen h-full w-[300px] bg-white shadow-custom z-20 overflow-y-auto"
       :class="{ active: showNavbar, closing: isClosing }"
     >
       <div class="absolute top-4 right-4 lg:hidden" @click="toggleNavbar">
@@ -23,7 +23,7 @@
     </div>
     <div
       class="overlay z-10"
-      :class="{ showActive: showOverlay, closing: isClosing }"
+      :class="{ showActive: showOverlay, closingOverlay: isClosing }"
       @click="toggleNavbar"
     ></div>
   </section>

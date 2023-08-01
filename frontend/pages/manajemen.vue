@@ -42,6 +42,7 @@ export default {
           email: user.email,
           role: user.role,
           regionName: { ...user.Region }.name,
+          regionId: user.regionId,
         };
       });
       console.log(data);
