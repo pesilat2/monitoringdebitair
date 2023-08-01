@@ -302,6 +302,7 @@ export default {
     },
     async createUser(userData) {
       this.$store.commit("loading/setLoading", true);
+      console.log(userData);
       try {
         // Kirim permintaan ke server untuk membuat pengguna baru
         const response = await this.$axios.post("/signup", {
@@ -328,7 +329,7 @@ export default {
             nama: userData.nama,
             email: userData.email,
             role: userData.role,
-            regionId: userData.regionId,
+            regionName: userData.regionName,
           };
           // Tambahkan pengguna baru ke dalam tabel data
           this.tableData.push(newUser);

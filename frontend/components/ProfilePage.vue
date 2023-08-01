@@ -87,12 +87,16 @@ export default {
   computed: {
     ...mapGetters(["loggedInUser"]),
     getAge() {
-      const birthDate = new Date(this.loggedInUser.age);
-      const today = new Date();
-      const timeDifference = today.getTime() - birthDate.getTime();
-      const ageInMilliseconds = new Date(timeDifference);
-      const ageInYears = ageInMilliseconds.getUTCFullYear() - 1970;
-      return ageInYears + " Tahun";
+      if (this.loggedInUser.age) {
+        const birthDate = new Date(this.loggedInUser.age);
+        const today = new Date();
+        const timeDifference = today.getTime() - birthDate.getTime();
+        const ageInMilliseconds = new Date(timeDifference);
+        const ageInYears = ageInMilliseconds.getUTCFullYear() - 1970;
+        return ageInYears + " Tahun";
+      } else {
+        return "";
+      }
     },
     gender() {
       let gender = "";

@@ -65,7 +65,7 @@
           <select
             id="region"
             class="w-full border border-gray-300 rounded-lg px-4 py-2"
-            v-model="user.regionName"
+            v-model="user.regionId"
           >
             <option selected disabled value="">Silihkan Pilih Desa</option>
             <option
@@ -128,7 +128,7 @@ export default {
         email: "",
         role: "USER",
         password: "",
-        regionName: "",
+        regionId: "",
       }),
     },
     type: {

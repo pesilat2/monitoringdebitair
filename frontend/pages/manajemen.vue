@@ -45,8 +45,6 @@ export default {
           regionId: user.regionId,
         };
       });
-      console.log(data);
-      // const regions = users.map((item) => item.Region.name);
       this.tableData = users;
     } catch (err) {
       this.error = err;
